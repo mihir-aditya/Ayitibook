@@ -1,0 +1,275 @@
+
+
+/* footer css start ======================== */
+
+.footer-bg {
+    /* background-color: #98b6d8; */
+    overflow: hidden;
+    position: relative;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+   
+}
+.footer-bg::before{
+    position: absolute;
+    content: '';
+    background: #402b31c7;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    opacity: 0.7;
+}
+.upper-text-box{
+    position: relative;
+    z-index: 99999;
+}
+
+.footer {
+    padding: 50px 0 0 0;
+}
+
+.footer a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.logo-img img {
+    width: auto;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-email-input {
+    position: relative;
+    width: 217px;
+    padding: 0 5px;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+}
+
+.footer .footer-email-input .form-control::placeholder{
+    color: #fff !important;
+}
+
+.website-logo {
+    margin-bottom: 0px;
+}
+
+.subscribe .link-head {
+    margin-bottom: 20px;
+}
+
+
+.footer .footer-email-input .form-control {
+    background-color: transparent;
+    border: none;
+    color: #FAFAFA;
+    font-size: 15px;
+    padding: 10px 10px;
+    border-radius: 0px !important;
+}
+
+.footer .footer-email-input .form-control::placeholder {
+    color: #FAFAFA;
+    opacity: 40%;
+}
+
+.footer .footer-email-input .form-control:focus {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+.send-arrow-img {
+    width: 100%;
+}
+
+.arrow-btn {
+    width: 33px;
+    text-align: center;
+}
+
+.footer .input-group .btn {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.text-one {
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.footer .link-head {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    color: #fff;
+}
+
+.getintouch .link-head,
+.accounts .link-head,
+.quick-links .link-head,
+.download-app .link-head {
+    margin-bottom: 30px;
+}
+
+.getintouch .link-head .text-one {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    margin-top: 20px;
+}
+
+/* .getintouch .text-one.link-spacing{
+    margin-bottom: 37px !important;
+  } */
+
+/* Adjust gap between social icons */
+.footer .d-flex.gap-3 a {
+    width: 32px;
+    border-radius: 100%;
+    text-align: center;
+    height: 32px;
+    border: 1px solid #fff;
+    line-height: 30px;
+    transition: all 0.04s ease-in-out;
+}
+.footer .d-flex.gap-3 a svg{
+    width:15px;
+}
+.footer .d-flex.gap-3 a:hover{
+background-color: var(--bs-primary);
+}
+.footer-list .list-item {
+    margin-bottom: 15px;
+}
+
+.footer-list .list-item .links {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 25px;
+    text-transform: capitalize;
+    transition: all 0.6s ease-in-out;
+}
+
+.accounts,
+.quick-links {
+    padding-left: 30px;
+}
+
+.download-app {
+    padding-left: 10px;
+}
+
+.footer-list .list-item:hover {
+    cursor: pointer;
+}
+
+.footer-list .list-item:hover .links {
+    transition: all 0.6s ease-in-out;
+    color:#bfb6b6;
+    font-weight: 500;
+}
+
+.footer-bottom {
+    border-top: 1px solid #d6cece9c;
+    padding:20px 0 20px 0;
+
+}
+
+.copyright {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #FFFFFF;
+    opacity: 60%;
+}
+
+/* footer css end ========================== */
+
+
+
+/* =======================================page 2 login page css ======================================== */
+
+.site-login-page .page-header .sub-title {
+    font-weight: 800;
+    font-family: var(--title);
+    font-size: 15px;
+    line-height: 18.15px;
+    /* text-align: center; */
+}
+
+.site-login-page .nav-item {
+    margin: 0 20px;
+    margin-bottom: 10px;
+}
+
+.form-login-content {
+    padding: 15px 0;
+}
+
+.form-login-content .heading {
+    font-size: 36px;
+    letter-spacing: 4px;
+    line-height: 30px;
+    margin-bottom: 23px;
+}
+
+.form-login-content .sub-text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    font-family: var(--bs-body-font-family);
+}
+
+.login-form {
+    padding-top: 15px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .form-login-content {
+        padding: 10px 0;
+    }
+
+    .form-login-content .heading {
+        font-size: 29px;
+        letter-spacing: 4px;
+        line-height: 30px;
+        margin-bottom: 23px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .form-login-content .heading {
+        font-size: 29px;
+        letter-spacing: 3px;
+        line-height: 30px;
+        margin-bottom: 15px;
+    }
+
+    .form-login-content .sub-text {
+        line-height: 15px;
+    }
+
+    .login-form {
+        padding-top: 7px;
+    }
+}
+
+@media only screen and (max-width: 576x) {
+    .form-login-content .heading {
+        font-size: 22px;
+        letter-spacing: 2px;
+        line-height: 30px;
+        margin-bottom: 15px;
+    }
+}
