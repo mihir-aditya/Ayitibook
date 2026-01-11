@@ -10974,7 +10974,7 @@
                                                         <form method="POST"
                                                             action="{{ route('seller.products.destroy', $product->id) }}">
                                                             @csrf
-                                                            @method('DELETE')
+                                                            {{-- @method('DELETE')                                                                                                                               --}}
                                                             <button class="dropdown-item text-danger">Remove</button>
                                                         </form>
 

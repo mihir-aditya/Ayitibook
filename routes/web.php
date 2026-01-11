@@ -109,8 +109,8 @@ Route::get('/dashboard', [SellerDashboardController::class, 'index'])
         Route::post('/orders/{id}/cancel', [SellerOrderController::class, 'cancel'])->name('orders.cancel');
 
         Route::resource('products', SellerProductController::class);
-Route::delete(
-    'products/{product}',
+Route::post(
+    'products/delete/{id}',
     [SellerProductController::class, 'destroy']
 )->name('products.destroy');
 

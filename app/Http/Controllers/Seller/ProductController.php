@@ -254,8 +254,9 @@ $data['slug'] = Str::slug($data['name']);
     /* =====================================================
      | Delete Product
      ===================================================== */
-    public function destroy(Product $product)
+    public function destroy(Product $product, $id)
     {
+        
         abort_if($product->seller_id !== auth('seller')->id(), 403);
 
         DB::transaction(function () use ($product) {
