@@ -26,7 +26,10 @@
     </li>
 
     <li class="nav-item mb-2">
-        <a class="nav-link text-white" href="{{ route('seller.profile') }}">Profile</a>
+        <a class="nav-link text-white" href="{{ route('seller.profile.edit') }}">Profile</a>
+    </li>
+    <li class="nav-item mb-2">
+        <a class="nav-link text-white" href="{{ route('seller.logout') }}">Logout</a>
     </li>
 </ul>
 

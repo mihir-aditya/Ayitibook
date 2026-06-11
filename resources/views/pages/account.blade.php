@@ -237,10 +237,8 @@
 </head>
 
 <body>
-    <!-- ====================site header ============================================-->
-    @include('components.top-header')
     <!-- large size header -->
-    @include('components.header')
+    @include('includes.header')
 
 
     <div class="page-wrapper">
@@ -284,6 +282,15 @@
                                 <a class="nav-link" id="myWishlist-tab" data-bs-toggle="pill" href="#myWishlist"
                                     role="tab"><i class='bx bx-heart-circle'></i> My Wishlist</a>
                             </li>
+                            @auth
+                                @if(optional(auth()->user())->affiliate)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('affiliate.dashboard', auth()->user()->affiliate->affiliate_code) }}">
+                                            <i class='bx bx-line-chart'></i> Affiliate Dashboard
+                                        </a>
+                                    </li>
+                                @endif
+                            @endauth
                         </ul>
                     </div>
 
@@ -591,7 +598,7 @@
 
 
         <!-- Site Footer -->
-        @include('components.footer')
+        @include('includes.footer')
 
     </div>
 

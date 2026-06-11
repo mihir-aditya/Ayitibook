@@ -225,10 +225,8 @@
 
 <body>
 
-    <!-- ====================site header ============================================-->
-   @include('components.top-header')
   <!-- large size header -->
-  @include('components.header')
+  @include('includes.header')
 
 
 
@@ -535,7 +533,7 @@
   </main>
 </div>
   <!-- Site Footer -->
-   @include('components.footer')
+   @include('includes.footer')
 
  
 

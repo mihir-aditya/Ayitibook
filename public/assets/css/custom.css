@@ -411,14 +411,6 @@
     color: #000;
 }
 
-.active-like-icon {
-    background-color: var(--secondary);
-     width: 40px;
-    height: 40px;
-    padding: 6px 10px;
-    border-radius: 50%;
-    color: #fff !important;
-}
 .product-icon-div .like-icon:hover,
 .view-icon:hover {
     cursor: pointer;
@@ -2264,13 +2256,13 @@
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   }
   .nav-pills .nav-link{
-    color: #fff;
+    color: #e21d1d;
     font-weight: 500;
     font-size: 14px;
 }
   .nav-pills .nav-link.active {
-    background: linear-gradient(145deg, #d3c9c6c2, #17110dd6);
-    color: #000;
+    background: #f5f5f5;
+    color: #c21919;
     font-weight: 500;
   }
   #productTabs .nav-pills .nav-link{
@@ -2279,7 +2271,7 @@
   #productTabs .nav-pills .nav-link.active {
     background: #f5f5f5;
     border:1px solid red;
-    color: #fff;
+    color: #942020e5;
     font-weight: 500;
   }
   .nav-pills .nav-link i{

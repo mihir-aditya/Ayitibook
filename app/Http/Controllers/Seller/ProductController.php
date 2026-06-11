@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Services\NotificationService;
 
 class ProductController extends Controller
 {
@@ -68,7 +69,7 @@ class ProductController extends Controller
         }
 
         return view(
-            'sellr.apps.e-commerce.admin.products',
+            'seller.products.products',
             ['products' => $query->paginate(10)]
         );
     }
@@ -82,7 +83,7 @@ class ProductController extends Controller
         $brands = Brand::where('status', 1)->get();
         $tags = Tag::where('status', 1)->get();
 
-        return view('sellr.apps.e-commerce.admin.addproduct', compact('categories', 'brands', 'tags'));
+        return view('seller.products.addproduct', compact('categories', 'brands', 'tags'));
     }
 
     /* =====================================================
@@ -95,27 +96,26 @@ class ProductController extends Controller
             $data = $request->validated();
 
             $data['seller_id'] = auth('seller')->id();
-            
+
             $data['is_active'] = $request->boolean('is_active');
             $data['can_purchase'] = $request->boolean('can_purchase');
             $data['refundable'] = $request->boolean('refundable');
             $data['is_flash_sale'] = $request->boolean('is_flash_sale');
-
+            $data['affiliate_percentage'] = $request->input('affiliate_percentage', 10); // Default to 10% if not provided
             /* =============================
              | HANDLE VARIANTS FIRST
              ============================= */
             $variants = array_values($request->input('variants', []));
 
-if (count($variants)) {
-    $data['price'] = collect($variants)->pluck('price')->min();
-    $data['stock_quantity'] = collect($variants)->pluck('quantity')->sum();
-}
+            if (count($variants)) {
+                $data['price'] = collect($variants)->pluck('price')->min();
+                $data['stock_quantity'] = collect($variants)->pluck('quantity')->sum();
+            }
 
-/* Fallbacks */
-$data['sku'] = $data['sku'] ?? $this->generateSku();
-$data['seller_id'] = auth('seller')->id();
-$data['slug'] = Str::slug($data['name']);
-
+            /* Fallbacks */
+            $data['sku'] = $data['sku'] ?? $this->generateSku();
+            $data['seller_id'] = auth('seller')->id();
+            $data['slug'] = Str::slug($data['name']);
 
             /* =============================
              | MEDIA
@@ -175,6 +175,15 @@ $data['slug'] = Str::slug($data['name']);
                     'videos' => $variantVideos,
                 ]);
             }
+            $seller = auth('seller')->user();
+            $notifService = app(NotificationService::class);
+
+            $notifService->newProduct($product, $seller);
+
+            // If it is a flash-sale product, also send the flash-sale notification
+            if (! empty($data['is_flash_sale'])) {
+                $notifService->flashSale($product, $seller);
+            }
         });
 
         return redirect()
@@ -189,12 +198,18 @@ $data['slug'] = Str::slug($data['name']);
     {
         abort_if($product->seller_id !== auth('seller')->id(), 403);
 
-        $product->load('variants');
+        $product->load([
+            'variants',
+            'sizes',
+            'reviews.user',
+            'category',
+            'brand',
+            'affiliateLinks.affiliate.user',
+            'affiliateLinks.clicks',
+            'affiliateLinks.commissions',
+        ]);
 
-        return view(
-            'sellr.apps.e-commerce.landing.productview',
-            compact('product')
-        );
+        return view('seller.products.productview', compact('product'));
     }
 
     /* =====================================================
@@ -202,7 +217,7 @@ $data['slug'] = Str::slug($data['name']);
      ===================================================== */
     public function edit($id)
     {
-        $product = Product::with('variants')
+        $product = Product::with(['variants', 'sizes'])
             ->where('seller_id', auth('seller')->id())
             ->findOrFail($id);
 
@@ -219,6 +234,7 @@ $data['slug'] = Str::slug($data['name']);
         $data = $request->validated();
         $data['sku'] = $data['sku'] ?? $product->sku ?? $this->generateSku();
 
+        // Update thumbnail if new one uploaded
         if ($request->hasFile('thumbnail')) {
             if ($product->thumbnail) {
                 Storage::disk('public')->delete($product->thumbnail);
@@ -226,22 +242,96 @@ $data['slug'] = Str::slug($data['name']);
             $data['thumbnail'] = $request->file('thumbnail')
                 ->store('products/thumbnails', 'public');
         }
+        if ($request->boolean('is_flash_sale') && ! $product->getOriginal('is_flash_sale')) {
+            $seller = auth('seller')->user();
+            app(NotificationService::class)->flashSale($product, $seller);
+        }
 
         $product->update($data);
 
-        /* Re-create variants */
-        $product->variants()->delete();
+        // ──────────────────────────────────────────────────────────
+        // HANDLE VARIANT IMAGES REMOVAL
+        // ──────────────────────────────────────────────────────────
+        $removedVariantImages = json_decode($request->input('removed_variant_images', '[]'), true);
+        $removedByIndex = [];
+        foreach ($removedVariantImages as $item) {
+            $removedByIndex[$item['variant_index']][] = $item['image'];
+        }
 
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variant) {
-                if (! empty($variant['variant_name'])) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'variant_name' => $variant['variant_name'],
-                        'sku' => $variant['sku'] ?? $this->generateSku(),
-                        'price' => $variant['price'] ?? $product->price,
-                        'quantity' => $variant['quantity'] ?? 0,
-                    ]);
+        // Load existing variants for comparison
+        $existingVariants = $product->variants->keyBy('id');
+        $keepVariantIds = [];
+
+        // ──────────────────────────────────────────────────────────
+        // PROCESS SUBMITTED VARIANTS
+        // ──────────────────────────────────────────────────────────
+        $submittedVariants = $request->input('variants', []);
+        foreach ($submittedVariants as $idx => $variantData) {
+            $variantId = $variantData['id'] ?? null;
+            $keepVariantIds[] = $variantId;
+
+            // Determine which existing images to keep
+            $existingImages = $variantData['existing_images'] ?? [];
+            $removedForThis = $removedByIndex[$idx] ?? [];
+            $finalExistingImages = array_diff($existingImages, $removedForThis);
+
+            // Delete removed images from storage
+            foreach ($removedForThis as $imgPath) {
+                Storage::disk('public')->delete($imgPath);
+            }
+
+            // Upload new images
+            $newImages = [];
+            if ($request->hasFile("variants.$idx.images")) {
+                foreach ($request->file("variants.$idx.images") as $img) {
+                    $newImages[] = $img->store('variants/images', 'public');
+                }
+            }
+
+            $allImages = array_merge($finalExistingImages, $newImages);
+
+            // Prepare variant data
+            $variantDataToSave = [
+                'variant_name' => $variantData['variant_name'],
+                'sku' => $variantData['sku'] ?? $this->generateSku(),
+                'price' => $variantData['price'],
+                'quantity' => $variantData['quantity'],
+                'images' => $allImages,
+                'videos' => [], // handle videos if needed
+            ];
+
+            if ($variantId && $existingVariants->has($variantId)) {
+                // Update existing variant
+                $existingVariants[$variantId]->update($variantDataToSave);
+            } else {
+                // Create new variant
+                $variantDataToSave['product_id'] = $product->id;
+                ProductVariant::create($variantDataToSave);
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────
+        // DELETE VARIANTS THAT WERE REMOVED
+        // ──────────────────────────────────────────────────────────
+        $variantsToDelete = $product->variants()->whereNotIn('id', $keepVariantIds)->get();
+        foreach ($variantsToDelete as $variant) {
+            // Delete variant images from storage
+            if ($variant->images) {
+                foreach ($variant->images as $img) {
+                    Storage::disk('public')->delete($img);
+                }
+            }
+            $variant->delete();
+        }
+
+        // ──────────────────────────────────────────────────────────
+        // HANDLE SIZES
+        // ──────────────────────────────────────────────────────────
+        if ($request->has('sizes')) {
+            $product->sizes()->delete();
+            foreach ($request->input('sizes', []) as $sizeName) {
+                if (! empty($sizeName)) {
+                    $product->sizes()->create(['size' => trim($sizeName)]);
                 }
             }
         }
@@ -256,7 +346,7 @@ $data['slug'] = Str::slug($data['name']);
      ===================================================== */
     public function destroy(Product $product, $id)
     {
-        
+
         abort_if($product->seller_id !== auth('seller')->id(), 403);
 
         DB::transaction(function () use ($product) {

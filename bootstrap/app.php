@@ -12,7 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 ->withMiddleware(function (Middleware $middleware): void {
     $middleware->alias([
-        'seller' => \App\Http\Middleware\SellerMiddleware::class,
+        'seller'           => \App\Http\Middleware\SellerMiddleware::class,
+        'affiliate.access' => \App\Http\Middleware\AffiliateAccess::class,
+        'admin.role'       => \App\Http\Middleware\AdminRoleMiddleware::class,  // ← added
     ]);
 })
 

@@ -83,7 +83,7 @@
           <span class="shop-cart-count">2</span>
         </a> --}}
 
-         <a href="/wishlist" class="btn btn-primary login-btn">
+         <a href="/login" class="btn btn-primary login-btn">
           {{-- <img src="./assets/images/Wishlist.png" alt="Wishlist-img" class=""> --}}
           <span class="wishlist-count">Login</span>
         </a>

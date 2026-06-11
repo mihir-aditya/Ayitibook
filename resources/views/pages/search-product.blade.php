@@ -233,9 +233,9 @@
 
 <body>
      <!-- ====================site header ============================================-->
-   @include('components.top-header')
+   {{-- @include('includes.top-header') --}}
   <!-- large size header -->
-  @include('components.header')
+  @include('includes.header')
 
     <style>
         /* Responsive fixed-size product cards */
@@ -557,11 +557,11 @@
         @forelse($products as $product)
             <div class="col-6 col-md-4 mb-4">
                 <div class="card h-100">
-                    <a href="{{ route('product-details', $product->slug) }}">
+                    <a href="{{ route('product-details', $product->id) }}">
                         <img src="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : asset('assets/images/placeholder.png') }}" class="card-img-top" alt="{{ $product->name }}">
                     </a>
                     <div class="card-body d-flex flex-column">
-                        <h6 class="card-title mb-2"><a href="{{ route('product-details', $product->slug) }}">{{ $product->name }}</a></h6>
+                        <h6 class="card-title mb-2"><a href="{{ route('product-details', $product->id) }}">{{ $product->name }}</a></h6>
                         <div class="mt-auto">
                             @if($product->discount_price)
                                 <div class="text-danger fw-bold">{{ $product->currency ?? '$' }}{{ number_format($product->discount_price) }}</div>

@@ -31,8 +31,8 @@
 
 <body>
     <!-- ==================== site header ==================== -->
-    @include('components.top-header')
-    @include('components.header')
+    {{-- @include('includes.top-header') --}}
+    @include('includes.header')
 
     <div class="page-wrapper">
         <main class="main-wrapper">
@@ -100,7 +100,7 @@
         </main>
     </div>
 
-    @include('components.footer')
+    @include('includes.footer')
 
     <!-- Vendor JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

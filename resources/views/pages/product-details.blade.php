@@ -1,269 +1,742 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <!-- Website Page Title -->
-    <title>Product-Detail | AyitiBook</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{ $product->name }} — Ayitibook</title>
 
-    <!-- Meta Tags -->
-    <meta charset="UTF-8">
-    <meta name="author" content="Author Name">
-    <meta name="robots" content="index, follow">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Viewport Meta Tag -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Favicon Tags -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/apple-touch-icon.png') }}">
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <!-- CSS Stylesheet Link -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fontawesome/css/all.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- common css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/custom.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/footer.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/header.css') }}">
-
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-
-
-    <!-- boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    
-  <!-- Toastify CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
+        :root {
+            --primary: #0b7285;
+            --accent: #8a385c;
+            --muted: #f5f6f8;
+            --card-bg: #ffffff;
+            --outline: #e6e6e6;
+            --btn-green: #0aa05a;
+            --btn-green-dark: #007f4f;
+        }
 
-        .subscribe-icon {
-           position: relative;
-           display: inline-block;
-       }
-       
-       /* Tooltip */
-       .subscribe-icon::after {
-           content: attr(data-tooltip);
-           position: absolute;
-           bottom: 125%;
-           left: 50%;
-           transform: translateX(-50%);
-           background-color: #333;
-           color: #fff;
-           padding: 4px 8px;
-           border-radius: 4px;
-           white-space: nowrap;
-           font-size: 12px;
-           opacity: 0;
-           pointer-events: none;
-           transition: opacity 0.2s ease-in-out;
-           z-index: 10;
-       }
-       .subscribe-icon:hover::after {
-           opacity: 1;
-       }
-       
-       /* Ring animation */
-       @keyframes ring {
-           0% { transform: rotate(0); }
-           1% { transform: rotate(30deg); }
-           3% { transform: rotate(-28deg); }
-           5% { transform: rotate(34deg); }
-           7% { transform: rotate(-32deg); }
-           9% { transform: rotate(30deg); }
-           11% { transform: rotate(-28deg); }
-           13% { transform: rotate(26deg); }
-           15% { transform: rotate(-24deg); }
-           17% { transform: rotate(22deg); }
-           19% { transform: rotate(-20deg); }
-           21% { transform: rotate(18deg); }
-           23% { transform: rotate(-16deg); }
-           25% { transform: rotate(14deg); }
-           27% { transform: rotate(-12deg); }
-           29% { transform: rotate(10deg); }
-           31% { transform: rotate(-8deg); }
-           33% { transform: rotate(6deg); }
-           35% { transform: rotate(-4deg); }
-           37% { transform: rotate(2deg); }
-           39% { transform: rotate(-1deg); }
-           41% { transform: rotate(0); }
-       }
-       
-       .ringing {
-           color: goldenrod !important;
-           animation: ring 0.6s ease-in-out;
-       }
-       
-       
+        body {
+            font-family: "Poppins", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: #f1f3f6;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
 
-        .thumbnail-gallery img {
-            cursor: pointer;
+        .container-page {
+            max-width: 2300px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding-left: 0;
+            margin-bottom: 10px;
+        }
+
+        .product-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 38px;
+            box-shadow: 0 6px 28px rgba(16, 24, 40, 0.06);
+            transform: scale(1.04);
+        }
+
+        .thumbs-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .thumb-btn,
+        .video-thumb {
+            width: 78px;
+            height: 78px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--muted);
             border: 2px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        .thumbnail-gallery img:hover,
-        .thumbnail-gallery img.active {
-            border-color: #dc3545;
-        }
-
-        .quantity-input {
-            width: 50px;
-            text-align: center;
-        }
-
-        .color-radio {
-            width: 24px;
-            height: 24px;
             cursor: pointer;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
+            overflow: hidden;
+            transition: 0.2s ease;
+        }
+
+        .thumb-btn.active {
+            border-color: #d98a8f;
+            box-shadow: 0 0 0 4px rgba(217, 138, 143, 0.06);
+        }
+
+        .thumb-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-thumb {
+            flex-direction: column;
+            color: #444;
+            font-size: 12px;
+        }
+
+        .video-thumb:hover {
+            background: #e9e9e9;
+            border-color: #ccc;
+        }
+
+        .image-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 26px;
+            height: 450px;
+            border: 1px solid var(--outline);
+            box-shadow: 0 8px 24px rgba(20, 20, 40, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
         }
 
-        .color-radio.white {
-            background: #fff;
-            border: 1px solid #ddd;
-        }
-
-        .color-radio.black {
-            background: #000;
-        }
-
-        .color-radio input {
-            display: none;
-        }
-
-        .color-radio input:checked+span {
-            display: block;
-            width: 30px;
-            height: 30px;
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            border-radius: 50%;
-            border: 2px solid #dc3545;
-        }
-
-        .size-btn {
-            min-width: 40px;
-        }
-
-        .delivery-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        /*page detail css */
-        .product-gallery {
-            display: flex;
-            gap: 20px;
-        }
-
-        .thumbnails {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .thumb-item {
-            width: 120px;
-            height: 120px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            background-color: #f5f5f5;
-        }
-
-        .thumb-item:hover {
-            border-color: var(--bs-secondary);
-        }
-
-        .thumb-item.active {
-            border-color: var(--bs-secondary);
-        }
-
-        .thumb-item img {
+        .image-card img {
             width: 100%;
-            height: 100%;
+            max-width: 420px;
+            max-height: 340px;
             object-fit: contain;
-        }
-
-        @media only screen and (max-width:768px) {
-            .thumb-item {
-                width: 120px;
-                height: 80px;
-            }
-
-        }
-
-        .main-image {
-            height: 526px;
-            display: flex;
-            background-color: #F5F5F5;
-            border-radius: 10px;
-            width: 100%;
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .main-image img {
-            width: 370px;
-            height: 315px;
             border-radius: 8px;
-            object-fit: contain;
+            background-color: #f9f9f9;
+            padding: 10px;
+            transition: opacity .25s ease;
         }
 
-        @media only screen and (max-width: 1024px) {
-            .main-image img {
-                width: 255px;
-                height: 315px;
-            }
-
-        }
-
-        .product-details {
-            padding-left: 20px;
-        }
-
-        @media only screen and (max-width:991px) {
-            .product-details {
-                padding-left: 12px;
-            }
+        .image-card img.fading {
+            opacity: 0;
         }
 
         .product-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 28px !important;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
-        .product-meta {
+        .price-row {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
-        @media only screen and (max-width: 1024px) {
-            .product-meta {
-                gap: 10px;
+        .price-container {
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            gap: 2px;
+        }
+
+        .currency {
+            font-size: 20px;
+            font-weight: 500;
+            margin-right: 4px;
+            line-height: 1;
+            align-self: flex-start;
+            padding-bottom: 2px;
+            color: #222;
+        }
+
+        .price-big {
+            font-size: 38px !important;
+            font-weight: 800;
+            line-height: 1;
+            align-self: flex-start;
+            color: #222;
+        }
+
+        .price-small {
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 2px;
+            line-height: 1;
+            align-self: flex-start;
+            padding-top: 4px;
+            color: #222;
+        }
+
+        .price-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 2px;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        .badge-discount {
+            background: #ff2d2d;
+            color: #fff;
+            font-weight: 700;
+            padding: 2px 8px 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 0;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .price-dec {
+            color: #777;
+            font-size: 16px;
+            text-decoration: line-through;
+            font-weight: 600;
+            margin-top: 0;
+            display: inline-block;
+            padding-left: 2px;
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            margin-left: 10px;
+        }
+
+        .rating .stars i {
+            color: #ffc107;
+            font-size: 16px;
+        }
+
+        #reviewCount {
+            font-size: 14px;
+            font-weight: 800;
+            color: #777;
+        }
+
+        .stock {
+            color: #d93636;
+            font-weight: 700;
+            margin-bottom: 14px;
+            font-size: 15px;
+        }
+
+        .delivery-label {
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .postal-input {
+            width: 330px;
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .postal-input input {
+            flex: 1;
+            border-radius: 30px;
+            border: 1px solid var(--outline);
+            padding: 10px 16px;
+            background: white;
+        }
+
+        .colors-grid {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .color-circle {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 4px solid #222;
+            box-shadow: 0 6px 20px rgba(10, 10, 20, 0.03);
+            cursor: pointer;
+            text-align: center;
+            transition: transform .12s;
+        }
+
+        .color-circle:hover {
+            transform: translateY(-4px);
+        }
+
+        .color-circle.active {
+            outline: 6px solid rgba(11, 114, 133, 0.06);
+            border-color: var(--primary);
+        }
+
+        .color-circle.out-of-stock-variant {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .color-circle img {
+            width: 62px;
+            height: 46px;
+            object-fit: contain;
+            margin-bottom: 6px;
+        }
+
+        .color-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .sizes {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .size-pill {
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 1.6px solid #b8b0b0;
+            font-weight: 600;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all .12s;
+        }
+
+        .size-pill.active {
+            background: transparent;
+            border-color: #0b7285;
+            color: #0b7285;
+            font-weight: 700;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .add-to-cart-btn {
+            background-color: #2ecc71;
+            /* Green */
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #28b862;
+        }
+
+        .buy-now-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .buy-now-btn {
+            background: #fff;
+            color: #0aa05a;
+            border: 2px solid #0aa05a;
+            border-radius: 50px;
+            padding: 12px 32px 12px 26px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 16px rgba(10, 160, 90, 0.08);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .buy-now-btn:hover {
+            background: #0aa05a;
+            color: #fff;
+        }
+
+        .buy-now-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0aa05a;
+            margin-left: 10px;
+        }
+
+        .buy-now-btn .buy-now-icon i {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            background: #fff;
+            color: #0aa05a;
+            border: none;
+            width: 36px;
+            height: 36px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qty-btn:hover {
+            background: #0aa05a;
+            color: #fff;
+        }
+
+        .qty-box input {
+            width: 50px;
+            text-align: center;
+            border: none;
+            outline: none;
+        }
+
+        .product-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 1px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-pill {
+            display: inline-block;
+            margin-top: 10px;
+            background: #d8bfd8;
+            color: #333333;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .guarantee {
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 18px;
+            background: #f5f5f5;
+            border: 1px solid #eaeaea;
+        }
+
+        .guar-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .guar-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: #e9f8f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        @media (max-width: 767px) {
+            .thumbs-vertical {
+                flex-direction: row;
+                justify-content: center;
+                margin-bottom: 12px;
             }
+
+            .thumb-btn,
+            .video-thumb {
+                width: 60px;
+                height: 60px;
+            }
+
+            .image-card {
+                height: auto;
+            }
+
+            .product-panel {
+                padding: 18px;
+            }
+        }
+
+        .guar-list {
+            list-style-type: disc !important;
+            list-style-position: outside !important;
+            margin-left: 25px !important;
+            padding-left: 20px !important;
+        }
+
+        .guar-list li {
+            display: list-item !important;
+            list-style-type: disc !important;
+        }
+
+        .floating-heart {
+            position: absolute;
+            top: 66px;
+            right: 14px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #e74c3c;
+            border: 1.5px solid #e74c3c;
+            height: 44px;
+            width: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .floating-heart:hover {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .active_wish {
+            background-color: #e74c3c !important;
+            color: #fff !important;
+        }
+
+        /* ── Affiliate Share Button ── */
+        .floating-share {
+            position: absolute;
+            top: 14px;
+            /* just below the heart */
+            right: 14px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #0b7285;
+            border: 1.5px solid #0b7285;
+            height: 44px;
+            width: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .floating-share:hover {
+            background-color: #0b7285;
+            color: #fff;
+        }
+
+        .floating-share.loading {
+            pointer-events: none;
+            opacity: .65;
+        }
+
+        /* ── Affiliate Share Panel ── */
+        .affiliate-share-panel {
+            display: none;
+            margin-top: 14px;
+            background: linear-gradient(135deg, #f0fbfd 0%, #e8f7f9 100%);
+            border: 1.5px solid #b2e0e8;
+            border-radius: 14px;
+            padding: 18px 20px;
+            animation: slideDown .25s ease;
+        }
+
+        .affiliate-share-panel.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .aff-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0b7285;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .aff-commission-badge {
+            display: inline-block;
+            background: #0b7285;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+
+        .aff-link-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid #c8e8ee;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+        }
+
+        .aff-link-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: #333;
+            background: transparent;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .aff-copy-btn {
+            background: #0b7285;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .2s;
+        }
+
+        .aff-copy-btn:hover {
+            background: #085f70;
+        }
+
+        .aff-copy-btn.copied {
+            background: #0aa05a;
+        }
+
+        .aff-socials {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .aff-social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity .2s, transform .1s;
+        }
+
+        .aff-social-btn:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        .aff-social-btn.whatsapp {
+            background: #25d366;
+            color: #fff;
+        }
+
+        .aff-social-btn.facebook {
+            background: #1877f2;
+            color: #fff;
+        }
+
+        .aff-social-btn.twitter {
+            background: #1da1f2;
+            color: #fff;
+        }
+
+        .aff-social-btn.copy-native {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .aff-not-affiliate {
+            font-size: 13px;
+            color: #555;
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .aff-not-affiliate a {
+            color: #0b7285;
+            font-weight: 700;
+        }
+
+        .more-sellers[data-tooltip]:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 0;
+            top: 120%;
+            background: #212121;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: nowrap;
+            z-index: 5;
         }
 
         .ratings {
@@ -291,3064 +764,2683 @@
             }
         }
 
-        .stock-info {
-            font-size: 14px;
+        /* Tooltip style */
+        .caution-icon {
+            margin-left: 6px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .in-stock {
-            color: #00c853;
+        .caution-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
 
-        .divider {
-            color: #ddd;
+        .caution-icon:hover::after {
+            opacity: 1;
         }
 
-        @media only screen and (max-width:768px) {
-            .stock-info {
-                font-size: 13px;
-            }
-
-            .product-details {
-                padding-left: 0px;
-            }
-
-            .product-title {
-                font-size: 19px;
-                margin-bottom: 8px;
-            }
-
-            .seller-name {
-                margin-bottom: 5px;
-            }
-
-            .ratings {
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 0px;
-
-            }
-
-            .main-image {
-                height: 440px;
-            }
-
-            .product-details .product-price {
-                margin: 12px 0;
-            }
-
-            .qty-btn {
-                padding: 8px 11px !important;
-            }
-
-            .quantity-input {
-                width: 40px;
-            }
-
-            .info-card {
-                flex-wrap: wrap;
-                gap: 5px;
-            }
+        .reviews-with-images {
+            position: relative;
         }
 
-        .more-sellers {
-            color: var(--bs-secondary);
-            font-size: 14px;
+        .review-images-slider {
+            scroll-behavior: smooth;
+            white-space: nowrap;
         }
 
-        .product-details .product-price {
-            font-size: 24px;
-            font-weight: 400;
-            margin: 20px 0;
+        .review-images-slider img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
         }
 
-        .product-description {
-            color: #000000;
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1.6px solid #b1a9a9;
-        }
-
-        @media only screen and (max-width: 1024px) {
-
-            .product-description {
-                margin-bottom: 15px;
-                font-size: 12px;
-                line-height: 22px;
-                padding-bottom: 14px;
-            }
-        }
-
-        .product-colors {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .product-colors .label {
-            font-size: 16px !important;
-            margin-bottom: 0px;
-        }
-
-        .product-sizes {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .product-sizes h3 {
-            font-size: 16px;
-            margin-bottom: 0;
-        }
-
-        .color-options {
-            display: flex;
-            gap: 10px;
-            padding-left: 11px;
-        }
-
-        .color-option input {
-            display: none;
-        }
-
-        .color-circle {
-            display: block;
-            width: 24px;
-            height: 24px;
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            border: 1px solid #ccc;
             border-radius: 50%;
-            border: 2px solid transparent;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
-        }
-
-        .color-option input:checked+.color-circle {
-            border-color: var(--bs-secondary);
-        }
-
-        .white {
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-
-        .pink {
-            background-color: #ff69b4;
-        }
-
-
-        .size-options {
+            font-weight: bold;
             display: flex;
-            gap: 15px;
-
-            margin-left: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
         }
 
-        .size-option input {
+        .scroll-btn.left {
+            left: -10px;
+        }
+
+        .scroll-btn.right {
+            right: -10px;
+        }
+
+        .rating-summary .progress {
+            height: 10px !important;
+            width: 250px;
+        }
+
+        .rating-circle {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .rating-circle canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .rating-circle span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .postal-text {
+            cursor: pointer;
+            color: black;
+            transition: color 0.3s ease;
+        }
+
+        .postal-text:hover {
+            color: #e74c3c;
+        }
+
+        .popup-overlay {
             display: none;
-        }
-
-        .size-option span {
-            display: block;
-            padding: 5px 12px;
-            border: 1.4px solid #928b8b;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .size-option input:checked+span {
-            background-color: var(--bs-secondary);
-            color: white;
-            border-color: var(--bs-secondary);
-        }
-
-        .quantity-wrapper {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            border: 1.4px solid #a19898;
-            border-radius: 4px;
-
-        }
-
-        .qty-btn {
-            border: none;
-            background: none;
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-
-        .qty-btn.minus {
-            border-right: 1.4px solid var(--bs-secondary);
-            background-color: var(--bs-secondary);
-            color: #fff;
-        }
-
-        .qty-btn.plus {
-            border-left: 1.4px solid var(--bs-secondary);
-            background-color: var(--bs-secondary);
-            color: #fff;
-        }
-
-        .quantity-input {
-            width: 50px;
-            border: none;
-            text-align: center;
-        }
-
-        .btn-buy-now {
-            background-color: var(--bs-secondary);
-            color: white;
-            border: none;
-            padding: 8px 40px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-wishlist {
-            border: 1.5px solid #918a8a;
-            background: none;
-            padding: 3px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-wishlist:hover {
-            background-color: var(--bs-primary);
-            border-color: transparent;
-        }
-
-        .btn-wishlist:hover i {
-            color: #fff;
-        }
-
-        .btn-add-cart {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            background-color: var(--bs-secondary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
             cursor: pointer;
         }
 
+        .check-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-        .delivery-info {
+        .check-btn:hover {
+            background: #c0392b;
+        }
+
+        .selected-variant-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0f7ff;
+            border: 1px solid #b8d4f0;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        /* Review Section Styles */
+        .review-section {
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .rating-summary-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 28px 32px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+        }
+
+        .rating-big-score {
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .rating-big-score .score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #111;
+            line-height: 1;
+        }
+
+        .rating-breakdown {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .rating-bar-row {
             display: flex;
             align-items: center;
-            /* flex-direction: column; */
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 7px;
+            font-size: .8rem;
         }
 
-        .info-card {
+        .rating-bar-row .bar-label {
+            min-width: 30px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .rating-bar-row .bar-track {
+            flex: 1;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .rating-bar-row .bar-fill {
+            height: 100%;
+            background: #f5a623;
+            border-radius: 99px;
+            transition: width .4s ease;
+        }
+
+        .rating-bar-row .bar-count {
+            min-width: 24px;
+            text-align: right;
+            color: #888;
+        }
+
+        .write-review-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+        }
+
+        .star-picker {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .info-card .icon {
-            font-size: 24px;
-        }
-
-        .info-card h4 {
-            font-size: 16px;
-            margin: 0;
-        }
-
-        .info-card p {
-            font-size: 12px;
-            color: #000;
-            margin: 0;
-        }
-
-        @media only screen and (max-width: 1024px) {
-            .info-card p {
-                font-size: 10px;
-                color: #000;
-                margin: 0;
-            }
-
-            .info-card h4 {
-                font-size: 14px;
-                margin: 0;
-            }
-        }
-
-        .contact-seller-btn {
-            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-direction: row-reverse;
             justify-content: flex-end;
         }
 
-        .btn-contact {
+        .star-picker input[type="radio"] {
+            display: none;
+        }
+
+        .star-picker label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color .15s, transform .1s;
+        }
+
+        .star-picker label:hover,
+        .star-picker label:hover~label,
+        .star-picker input[type="radio"]:checked~label {
+            color: #f5a623;
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 110px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: .875rem;
+            resize: vertical;
+            outline: none;
+        }
+
+        .image-upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            font-size: .83rem;
+            font-weight: 500;
+            color: var(--primary);
+            border: 1.5px dashed var(--primary);
+            border-radius: 8px;
+            padding: 7px 14px;
+            transition: background .13s;
+        }
+
+        .review-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .04);
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #9333ea);
+            color: #fff;
+            font-weight: 700;
+            font-size: .9rem;
             display: flex;
             align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .review-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .review-photos img {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .btn-delete-review {
+            display: inline-flex;
+            align-items: center;
             gap: 5px;
-            border: 1px solid #ddd;
-            background: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+            font-size: .78rem;
+            font-weight: 500;
+            color: #dc2626;
+            background: #fff0f0;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 4px 10px;
             cursor: pointer;
         }
 
-
-        @media (max-width: 768px) {
-            .product-gallery {
-                flex-direction: column;
-            }
-
-            .thumbnails {
-                flex-direction: row;
-                order: 2;
-            }
-
-            .main-image {
-                order: 1;
-            }
-
-            .quantity-wrapper {
-                flex-wrap: wrap;
-            }
+        .img-preview-wrap {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
         }
 
-        /* review */
-        .hover-dropdown {
+        .img-preview-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .img-preview-wrap .remove-img {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, .55);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .login-to-review {
+            background: #fdf8ff;
+            border: 1.5px dashed #d8b4fe;
+            border-radius: 12px;
+            padding: 22px 28px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .already-reviewed-banner {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 12px;
+            padding: 16px 22px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .review-alert {
+            border-radius: 10px;
+            padding: 13px 18px;
+            font-size: .875rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .review-alert.success {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .review-alert.error {
+            background: #fff1f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .subscribe-icon {
             position: relative;
             display: inline-block;
+            cursor: pointer;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
+        @keyframes ring {
+            0% {
+                transform: rotate(0);
+            }
+
+            1% {
+                transform: rotate(30deg);
+            }
+
+            3% {
+                transform: rotate(-28deg);
+            }
+
+            5% {
+                transform: rotate(34deg);
+            }
+
+            7% {
+                transform: rotate(-32deg);
+            }
+
+            9% {
+                transform: rotate(30deg);
+            }
+
+            11% {
+                transform: rotate(-28deg);
+            }
+
+            13% {
+                transform: rotate(26deg);
+            }
+
+            15% {
+                transform: rotate(-24deg);
+            }
+
+            41% {
+                transform: rotate(0);
+            }
         }
 
-        .hover-dropdown:hover .dropdown-content {
-            display: block;
+        .ringing {
+            color: goldenrod !important;
+            animation: ring .6s ease-in-out;
         }
 
-        .dropdown-content .btn {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 10px 16px;
-            border: none;
-            background: none;
-            color: black;
-            transition: background-color 0.3s;
+        /* Additional styles for recommendation sections */
+        .frequently-bought-section {
+            background: #fff8f0;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #ffe0b5;
         }
 
-        .dropdown-content .btn:hover {
-            background-color: #f1f1f1;
+        .bundle-total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ffe0b5;
+            text-align: right;
         }
 
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
 
-        .nav-link img {
-            max-height: 70px;
-            object-fit: cover;
-            border: 2px solid transparent;
-            border-radius: 5px;
-            transition: border-color 0.3s ease;
-        }
-        
+            50% {
+                transform: scale(1.05);
+            }
 
-        .nav-pills .nav-link{
-            background: #f5f5f5;
-            color: #fff;
-            font-weight: 500;
-            border: 1px solid transparent;
-            padding: 0px;
-            width: 100%;
-            max-height: 150px;
-            height: 110px;
-       }
-        .nav-pills .nav-link.active{
-            border-color: red;;
-        }
-       .product-detail-page .tab-content{
-            height: 465px;
-            padding: 30px;
-       }
-       .tab-image-box{
-        width: 100%;
-        height: 300px;
-       }
-       .tab-image-box img{
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-       }
-      .video-box i{
-        color: #fff;
-        width: 35px;
-        line-height: 25px;
-        height: 35px;
-        background:
-        #db5386 !important;
-        border-radius:
-        100%;
-        margin-bottom: 8px;
-        text-align: center;
+            100% {
+                transform: scale(1);
+            }
         }
 
-      .video-box h6{
-            font-size: 14px !important;
-            text-align: center;
+        .flash-sale-swiper .swiper-button-next,
+        .flash-sale-swiper .swiper-button-prev,
+        .best-selling-swiper .swiper-button-next,
+        .best-selling-swiper .swiper-button-prev,
+        .top-rated-swiper .swiper-button-next,
+        .top-rated-swiper .swiper-button-prev,
+        .new-arrivals-swiper .swiper-button-next,
+        .new-arrivals-swiper .swiper-button-prev,
+        .discounted-swiper .swiper-button-next,
+        .discounted-swiper .swiper-button-prev,
+        .same-seller-swiper .swiper-button-next,
+        .same-seller-swiper .swiper-button-prev,
+        .low-stock-swiper .swiper-button-next,
+        .low-stock-swiper .swiper-button-prev {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .flash-sale-swiper .swiper-button-next:hover,
+        .flash-sale-swiper .swiper-button-prev:hover {
+            background: rgba(0, 0, 0, 0.8);
         }
     </style>
-<style>
-    /* Optional: hide content initially */
-    .accordion-body {
-        display: none;
-        padding: 10px;
-        background: #fff;
-    }
 
-    .accordion-body.show {
-        display: block;
-    }
-
-
-    /* header code */
-    body {
-        overflow-x: hidden;
-        /* Prevent page from scrolling horizontally */
-    }
-
-    /* Added By JK ....Start  */
-    #megamenu {
-        position: sticky;
-        top: 70px;
-        /* adjust to match your header height */
-        z-index: 100;
-        /* background: white; */
-        display: none;
-        /* default is hidden */
-        /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list .inner-sub-menu.open-left {
-        left: auto;
-        right: 220px;
-        /* opens to the left */
-    }
-
-    .inner-sub-menu {
-        left: 220px;
-        /* default */
-    }
-
-    .inner-sub-menu.open-left {
-        left: auto;
-        right: 220px;
-    }
-
-    /* Added By JK ....End  */
-
-    .category-list .inner-menu .inner-sub-menu-list .inner-sub-menu {
-        right: auto;
-        left: 100%;
-        min-width: 220px;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list:hover>.inner-sub-menu {
-        display: block;
-    }
-
-    @media screen and (max-width: 1200px) {
-
-        /* If menu goes beyond screen width, show to the left instead */
-        .category-list .inner-menu .inner-sub-menu-list:hover>.inner-sub-menu {
-            left: auto;
-            right: 100%;
-        }
-    }
-
-    .category-list {
-        background-color: #f7f4f424;
-        padding: 0px 10px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 4px 0px;
-    }
-
-
-    .category-list .parent-menu-list {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-    }
-
-    .category-list .parent-menu-list a {
-        color: #000;
-    }
-
-    .category-list .parent-menu {
-        padding: 11px 13px;
-        position: relative;
-    }
-
-    /* Submenu styling */
-    .category-list .inner-menu {
-        background:
-            #fff;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        padding:
-            0;
-        box-shadow: rgba(96, 93, 93, 0.21) 0px 2px 9px;
-        border-radius:
-            4px;
-        opacity: 0;
-        visibility: hidden;
-        transition:
-            all 0.3s ease-in-out;
-        z-index: 10;
-        width: 220px;
-    }
-
-    /* Submenu item */
-    .category-list .inner-menu .inner-sub-menu-list {
-        padding: 12px 17px;
-        white-space: nowrap;
-        position: relative;
-        color: #131212;
-        font-weight: 400;
-        font-size: 14px;
-    }
-
-    .inner-sub-menu-list {
-        position: relative !important;
-    }
-
-    .inner-sub-menu-list::after {
-        content: "\f105";
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: inherit;
-        font-size: 13px;
-        font-family: "Font Awesome 5 free";
-        font-weight: 900;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list .inner-sub-menu {
-        position: absolute;
-        left: 220px;
-        width: 220px;
-        top: -1px;
-        background:
-            #fbfbfb;
-        opacity: 0;
-        visibility: hidden;
-        transition:
-            all 0.3s ease-in-out;
-        z-index: 10;
-        box-shadow: rgba(0, 0, 0, 0.1) -4px 4px 8px;
-        border:
-            1px solid #d3d3d34f;
-        border-radius:
-            4px;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list .inner-sub-menu li {
-        padding: 12px 16px;
-    }
-
-    .parent-menu-list .parent-menu:hover .main-link {
-        transition: all 0.5s ease-in-out;
-        color: var(--bs-primary);
-
-    }
-
-    /* Hover effect */
-    .category-list .parent-menu:hover>.inner-menu {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list:hover {
-        background: #e8b3ba;
-        font-weight: 500;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list:hover>.inner-sub-menu {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .category-list .inner-menu .inner-sub-menu-list .inner-sub-menu li:hover {
-        background: #f2c0ce;
-    }
-
-    .active_wish {
-        background-color: red !important;
-        color: white !important;
-    }
-</style>
 </head>
 
 <body>
 
-    <!-- ====================site header ============================================-->
-   @include('components.top-header')
-  <!-- large size header -->
-  @include('components.header')
+    @include('includes.header')
 
- 
+    @php
+        /* ── Images ── */
+        $productImages = $product->images;
+        if (is_string($productImages)) {
+            $productImages = json_decode($productImages, true);
+        }
+        $productImages = is_array($productImages) ? array_filter($productImages) : [];
 
+        /* ── Videos ── */
+        $productVideos = $product->videos;
+        if (is_string($productVideos)) {
+            $productVideos = json_decode($productVideos, true);
+        }
+        $productVideos = is_array($productVideos) ? array_filter($productVideos) : [];
 
-    <div class="page-wrapper">
-        <div class="main-wrapper">
-            <div class="container">
-                <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb py-3">
-                        <li class="breadcrumb-item"><a href="my-account.html">Account</a></li>
-                        <li class="breadcrumb-item"><a href="#">Gaming</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
-                    </ol>
-                </nav>
+        /* ── Pricing ── */
+        $finalPrice = $product->final_price ?? $product->price;
+        $hasDiscount = $product->discount_price && $product->discount_type;
+        $discountPct = $product->discount_percentage ?? 0;
 
-                <!-- product-detail-div" -->
-                <div class="container py-5 product-detail-page">
-                    <div class="row">
-                        <!-- Product Images -->
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <!-- Nav tabs -->
-                                    <ul class="nav flex-column nav-pills" id="productTabs" role="tablist">
-                                        <li class="nav-item mb-2" role="presentation">
-                                            <button class="nav-link active" id="tab1-tab" data-bs-toggle="pill"
-                                                data-bs-target="#tab1" type="button" role="tab">
-                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" class="img-fluid"
-                                                    alt="{{ $product->name }}">
-                                            </button>
-                                        </li>
-                   @php
-    $videos = collect(json_decode($product->videos, true) ?? [])
-                ->filter(fn ($v) => !empty($v))
-                ->values();
-@endphp
+        /* ── Variants ── */
+        $variants = $product->variants ?? collect();
 
-@if($videos->count() > 0)
-    @foreach ($videos as $video)
-        <li class="nav-item mb-2" role="presentation">
-            <button class="nav-link" id="tab{{ $loop->index + 2 }}-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#tab{{ $loop->index + 2 }}"
-                type="button"
-                role="tab">
-                <div class="video-box">
-                    <i class="fa fa-play" aria-hidden="true"></i>
-                    <h6>Video {{ $loop->iteration }}</h6>
-                </div>
-            </button>
-        </li>
-    @endforeach
-@endif
+        /* ── Reviews ── */
+        $reviews = $product->reviews ?? collect();
+        $totalReviews = $reviews->count();
+        $avgRating = $totalReviews > 0 ? round($reviews->avg('rating'), 1) : 0;
+        $userReview = auth()->check() ? $reviews->firstWhere('user_id', auth()->id()) : null;
+        $ratingCounts = [];
+        for ($s = 5; $s >= 1; $s--) {
+            $ratingCounts[$s] = $reviews->where('rating', $s)->count();
+        }
+        $allReviewImages = $reviews->flatMap(fn($r) => !empty($r->image_urls) ? $r->image_urls : []);
 
-                                        @foreach (json_decode($product->images, true) as $image)
-    <li class="nav-item mb-2" role="presentation">
-        <button
-            class="nav-link"
-            id="tab{{ $loop->index + $videos->count() + 2 }}-tab"
-            data-bs-toggle="pill"
-            data-bs-target="#tab{{ $loop->index + $videos->count() + 2 }}"
-            type="button"
-            role="tab">
+        $relatedProducts = $product->relatedProducts ?? collect();
 
-            <img
-                src="{{ asset('storage/' . $image) }}"
-                class="img-fluid"
-                alt="{{ $product->name }}">
-        </button>
-    </li>
-@endforeach
+        // Get all recommendation collections from controller
+        $suggestedProducts = $suggestedProducts ?? collect();
+        $recommendedProducts = $recommendedProducts ?? collect();
+        $bestSellingProducts = $bestSellingProducts ?? collect();
+        $newArrivals = $newArrivals ?? collect();
+        $frequentlyBoughtTogether = $frequentlyBoughtTogether ?? collect();
+        $similarPriceProducts = $similarPriceProducts ?? collect();
+        $topRatedProducts = $topRatedProducts ?? collect();
+        $flashSaleProducts = $flashSaleProducts ?? collect();
+        $sameSellerProducts = $sameSellerProducts ?? collect();
+        $discountedProducts = $discountedProducts ?? collect();
+        $lowStockProducts = $lowStockProducts ?? collect();
+    @endphp
 
-                                    </ul>
-                                </div>
+    <div class="container container-page">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb ps-0">
+                <li class="breadcrumb-item"><a href="./" class="text-decoration-none text-muted">Home</a></li>
+                @if ($product->category)
+                    <li class="breadcrumb-item"><a href="#"
+                            class="text-decoration-none text-muted">{{ $product->category->name }}</a></li>
+                @endif
+                <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+            </ol>
+        </nav>
 
-                                <div class="col-md-9">
-                                    <!-- Tab panes -->
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade show active" id="tab1" role="tabpanel">
-                                            <div class="tab-image-box">
-                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="Main product image" class="w-100">
-                                            </div>
-                                        </div>
-                                        @foreach ($videos as $video)
-                                            <div class="tab-pane fade" id="tab{{ $loop->index + 2 }}" role="tabpanel">
-                                                <video controls class="w-100" style="max-height: 400px;">
-                                                    <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            </div>
-                                        @endforeach
-                                        @foreach (json_decode($product->images) as $image)
-                                            <div class="tab-pane fade" id="tab{{ $loop->index + $videos->count() + 2 }}" role="tabpanel">
-                                                <div class="tab-image-box">
-                                                    <img src="{{ asset('storage/' . $image) }}" alt="Product image {{ $loop->index + 1 }}">
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
+        <div class="product-panel">
+            <div class="row gx-4">
+                <!-- LEFT -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3 d-none d-md-flex thumbs-vertical">
+                            <div class="thumb-btn active"
+                                onclick="switchMainImage('{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : asset('assets/images/no-image.png') }}', this)">
+                                <img src="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : asset('assets/images/no-image.png') }}"
+                                    alt="{{ $product->name }}">
                             </div>
+                            @foreach ($productVideos as $i => $video)
+                                <div class="video-thumb" data-bs-toggle="modal"
+                                    data-bs-target="#videoModal{{ $i }}">
+                                    <i class="fa fa-play-circle" style="font-size:20px;"></i>
+                                    <small>Video {{ $i + 1 }}</small>
+                                </div>
+                            @endforeach
+                            @foreach ($productImages as $i => $image)
+                                <div class="thumb-btn"
+                                    onclick="switchMainImage('{{ asset('storage/' . $image) }}', this)">
+                                    <img src="{{ asset('storage/' . $image) }}"
+                                        alt="{{ $product->name }} {{ $i + 1 }}">
+                                </div>
+                            @endforeach
                         </div>
-                         <!-- Product Details -->
-                        <div class="col-md-6">
-                            <div class="product-details">
-                                <h1 class="product-title">{{ $product->name }}</h1>
-                                 <div class="d-flex align-items-center gap-2 mb-2">
-                                    <p class="seller-name text-danger text-capitalize mb-0"><a href="">Seller name</a></p>
-                                     <span class="subscribe-icon" data-tooltip="Subscribe this Seller">
-                                         <i class="fas fa-bell fa-lg text-primary" id="subscribeIcon" style="cursor: pointer;"></i>
-                                     </span> 
-                                 </div> 
-                                                 
-                                <div class="product-meta">
-                                    <div class="ratings">
-                                        <span class="stars">
-                                            ★★★★<span class="star-empty">★</span>
-                                        </span>
-                                        <span class="review-count">(150 Reviews) | </span>
-                                    </div>
-                                    <div class="stock-info">
-                                        <span class="in-stock">In Stock</span>
-                                        <span class="stock-count">({{ $product->stock_quantity }} stocks)</span>
-                                    </div>
-                                    <span class="divider">|</span>
-                                    <span class="more-sellers">5 more sellers</span>
+                        <div class="flex-fill">
+                            <div class="image-card position-relative">
+                                {{-- Affiliate Share Button --}}
+
+                                <button id="affShareBtn" class="floating-share"
+                                    onclick="toggleAffiliatePanel({{ $product->id }})"
+                                    title="Share & Earn Commission">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                {{-- Wishlist Heart --}}
+                                <button id="wishlist-btn-{{ $product->id }}"
+                                    class="heart-btn floating-heart {{ isset($product->is_wishlist) && $product->is_wishlist ? 'active_wish' : '' }}"
+                                    onclick="addWishlist({{ $product->id }})">
+                                    <i
+                                        class="{{ isset($product->is_wishlist) && $product->is_wishlist ? 'fas' : 'far' }} fa-heart"></i>
+                                </button>
+
+
+
+
+                                <img id="mainImage"
+                                    src="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : asset('assets/images/no-image.png') }}"
+                                    alt="{{ $product->name }}">
+                            </div>
+
+                            {{-- Affiliate Share Panel --}}
+                            <div id="affiliateSharePanel" class="affiliate-share-panel">
+                                <div id="affPanelContent">
+                                    {{-- filled by JS --}}
                                 </div>
-
-                                <div class="product-price">{{ $product->currency }} {{ $product->price }}</div>
-
-                                <p class="product-description">
-                                    {{ $product->description }}
-                                </p>
-
-                                <div class="product-colors">
-                                    <h3 class="label">Colours:</h3>
-                                    <div class="color-options">
-                                        <label class="color-option">
-                                            <input type="radio" name="color" value="white" checked>
-                                            <span class="color-circle white"></span>
-                                        </label>
-                                        <label class="color-option">
-                                            <input type="radio" name="color" value="pink">
-                                            <span class="color-circle pink"></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="product-sizes">
-                                    <h3>Size:</h3>
-                                    <div class="size-options">
-                                        <label class="size-option">
-                                            <input type="radio" name="size" value="XS">
-                                            <span>XS</span>
-                                        </label>
-                                        <label class="size-option">
-                                            <input type="radio" name="size" value="S">
-                                            <span>S</span>
-                                        </label>
-                                        <label class="size-option">
-                                            <input type="radio" name="size" value="M" checked>
-                                            <span>M</span>
-                                        </label>
-                                        <label class="size-option">
-                                            <input type="radio" name="size" value="L">
-                                            <span>L</span>
-                                        </label>
-                                        <label class="size-option">
-                                            <input type="radio" name="size" value="XL">
-                                            <span>XL</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="quantity-wrapper">
-                                    <div class="quantity-selector">
-                                        <button class="qty-btn minus" onclick="changeQuantity(-1)">-</button>
-                                        <input type="number" id="quantity" value="1" min="1" class="quantity-input">
-                                        <button class="qty-btn plus" onclick="changeQuantity(1)">+</button>
-                                    </div>
-                                    <button onclick="buyNow({{ $product->id }})" class="btn-buy-now">Buy Now</button>
-                                    <button id="wishlist-btn-{{ $product->id }}" onclick="addWishlist({{ $product->id }})" class="btn-wishlist {{ $product->is_wishlist ? 'active_wish' : '' }}"><i class="far fa-heart"></i></button>
-                                </div>
-
-                                @if($product->is_cart)
-                                    <button onclick="window.location.href='{{ route('cart.index') }}'" class="btn btn-primary w-100 mb-4">Go TO CART</button>
-                                @else
-                                <button class="btn btn-primary w-100 mb-4" onclick="addToCart({{ $product->id }})">ADD TO CART</button>
-                                @endif
-
-                                <div class="delivery-info">
-                                    <div class="info-card">
-                                        <div class="icon"> <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_1_5652)">
-                                                    <path
-                                                        d="M11.6673 31.6667C13.5083 31.6667 15.0007 30.1743 15.0007 28.3333C15.0007 26.4924 13.5083 25 11.6673 25C9.82637 25 8.33398 26.4924 8.33398 28.3333C8.33398 30.1743 9.82637 31.6667 11.6673 31.6667Z"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path
-                                                        d="M28.3333 31.6667C30.1743 31.6667 31.6667 30.1743 31.6667 28.3333C31.6667 26.4924 30.1743 25 28.3333 25C26.4924 25 25 26.4924 25 28.3333C25 30.1743 26.4924 31.6667 28.3333 31.6667Z"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path
-                                                        d="M8.33398 28.3335H7.00065C5.89608 28.3335 5.00065 27.4381 5.00065 26.3335V21.6668M3.33398 8.3335H19.6673C20.7719 8.3335 21.6673 9.22893 21.6673 10.3335V28.3335M15.0007 28.3335H25.0007M31.6673 28.3335H33.0007C34.1052 28.3335 35.0007 27.4381 35.0007 26.3335V18.3335M35.0007 18.3335H21.6673M35.0007 18.3335L30.5833 10.9712C30.2218 10.3688 29.5708 10.0002 28.8683 10.0002H21.6673"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path
-                                                        d="M8 28H6.66667C5.5621 28 4.66667 27.1046 4.66667 26V21.3333M3 8H19.3333C20.4379 8 21.3333 8.89543 21.3333 10V28M15 28H24.6667M32 28H32.6667C33.7712 28 34.6667 27.1046 34.6667 26V18M34.6667 18H21.3333M34.6667 18L30.2493 10.6377C29.8878 10.0353 29.2368 9.66667 28.5343 9.66667H21.3333"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path d="M5 11.8181H11.6667" stroke="black" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M1.81836 15.4546H8.48503" stroke="black" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M5 19.0908H11.6667" stroke="black" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_1_5652">
-                                                        <rect width="40" height="40" fill="white" />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        </div>
-                                        <div class="content">
-                                            <h4>Free Delivery</h4>
-                                            <p>Enter your postal code for Delivery Availability</p>
-                                        </div>
-                                    </div>
-                                    <div class="info-card">
-                                        <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_1_5657)">
-                                                    <path
-                                                        d="M33.3327 18.3334C32.9251 15.4004 31.5645 12.6828 29.4604 10.5992C27.3564 8.51563 24.6256 7.18161 21.6888 6.80267C18.752 6.42372 15.7721 7.02088 13.208 8.50216C10.644 9.98343 8.6381 12.2666 7.49935 15.0001M6.66602 8.33341V15.0001H13.3327"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path
-                                                        d="M6.66602 21.6667C7.07361 24.5997 8.43423 27.3173 10.5383 29.4009C12.6423 31.4845 15.3731 32.8186 18.3099 33.1975C21.2467 33.5764 24.2266 32.9793 26.7907 31.498C29.3547 30.0167 31.3606 27.7335 32.4994 25.0001M33.3327 31.6667V25.0001H26.666"
-                                                        stroke="black" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_1_5657">
-                                                        <rect width="40" height="40" fill="white" />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        </div>
-                                        <div class="content">
-                                            <h4>Return Delivery</h4>
-                                            <p>Free 30 Days Delivery Returns. Details</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="contact-seller">
-                                    <div class="dropdown button-dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            Contact seller
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Send Enqury</a></li>
-                                            <li><a class="dropdown-item" href="#">Send Enqury</a></li>
-                                            <li><a class="dropdown-item" href="#">Send Enqury</a></li>
-                                        </ul>
-                                    </div>
-                                </div> -->
-
-                                <div class="contact-seller-btn">
-                                   
-                                        <button class="btn btn-primary me-2" type="button" aria-expanded="false">
-                                           send Enqury
-                                        </button>
-
-                                        <button class="btn btn-primary" type="button"aria-expanded="false">
-                                            Contact seller
-                                        </button>
-                                       
-                                    
-                                </div>
-
                             </div>
                         </div>
                     </div>
-                </div>
 
-
-
-                 <!--product description -->
-            <div class="row mb-4 mt-5">
-                <div class="col-md-7">
-                    <div class="product-description-box">
-                        <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
-                            <div class="section-head mb-0">
-                                <span class="sub-title text-capitalize">Description</span>
-                            </div>
-                        </div>
-                        <p class="product-des">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae reprehenderit a nihil
-                            recusandae sapiente nulla explicabo tempora alias earum. Provident.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae reprehenderit a nihil
-                            recusandae sapiente nulla explicabo tempora alias earum. Provident.
+                    <div class="desc-box mt-3">
+                        <h5 style="font-weight:800;">Description</h5>
+                        <p style="color:var(--primary); font-weight:700;">Listed by a verified partner store:
+                            {{ $product->seller->shop_name ?? 'Unknown Seller' }}
                         </p>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <img src="./assets/images/poducts/sm-img3.png" alt="product image" class="w-100 img-style">
-                </div>
-            </div>
-
-                  <!-- related product -->
-            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative mt-5">
-                <div class="section-head mb-0">
-                    <span class="sub-title text-capitalize">Related Product</span>
-                </div>
-            </div>
-            <!-- Swiper -->
-            <div class="swiper related-product-swiper pt-3 ">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                            
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Suggested product -->
-            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative mt-5">
-                <div class="section-head mb-0">
-                    <span class="sub-title text-capitalize">Suggested Product</span>
-                </div>
-            </div>
-            <!-- Swiper -->
-            <div class="swiper suggest-product-swiper pt-3 ">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="suggested-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- latest -items list  -->
-            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative mt-4">
-                <div class="section-head mb-0">
-                    <span class="sub-title">New Arrivals</span>
-                </div>
-            </div>
-            <!-- Swiper -->
-            <div class="swiper latest-product pt-3 ">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="share-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/media1.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">ASUS FHD Gaming Laptop</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$960</span>
-                                    <p class="text1 text-gray "> <strike>$1160</strike></p>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="related-product mb-4">
-                            <div class="media-box ">
-                                <div class="product-img">
-                                    <a href="product-detail.html">
-                                        <img src="./assets/images/wishlist/product-media3.png" alt="media">
-                                    </a>
-
-                                    <div class="hover-btn">
-                                        <a href="cart-page.html" class="btn add-cart add-cart2"><svg width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.25 20.25C8.66421 20.25 9 19.9142 9 19.5C9 19.0858 8.66421 18.75 8.25 18.75C7.83579 18.75 7.5 19.0858 7.5 19.5C7.5 19.9142 7.83579 20.25 8.25 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path
-                                                    d="M18.75 20.25C19.1642 20.25 19.5 19.9142 19.5 19.5C19.5 19.0858 19.1642 18.75 18.75 18.75C18.3358 18.75 18 19.0858 18 19.5C18 19.9142 18.3358 20.25 18.75 20.25Z"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M2.25 3.75H5.25L7.5 16.5H19.5" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M7.5 12.5H19.1925C19.2792 12.5001 19.3633 12.4701 19.4304 12.4151C19.4975 12.3601 19.5434 12.2836 19.5605 12.1986L20.9105 5.44859C20.9214 5.39417 20.92 5.338 20.9066 5.28414C20.8931 5.23029 20.8679 5.18009 20.8327 5.13717C20.7975 5.09426 20.7532 5.05969 20.703 5.03597C20.6528 5.01225 20.598 4.99996 20.5425 5H6"
-                                                    stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                            Add To Cart</a>
-                                    </div>
-                                </div>
-                                <span class="badge style1 badge-primary">
-                                    -35%
-                                </span>
-                                <div class="product-icon-div">
-                                    <ul class="ps-0">
-                                        <li class="delete-icon meta-icon">
-                                            <a href="" class=""><i class='bx bx-share bx-flip-horizontal'></i></a>
-                                        </li>
-                                        <li class="view-icon meta-icon">
-                                            <a href="" class=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="content-box">
-                                <h6 class="title">
-                                    <a href="product-detail.html">HAVIT HV-G92 Gamepad</a>
-                                </h6>
-                                <div class="meta-div">
-                                    <span class="text1 text-danger">$560</span>
-                                </div>
-                                <div class="bottom-box d-flex align-items-center">
-                                    <div class="d-flex align-items-center rating-icon">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p class="rating-num mb-0"> (65)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- review -->
-            <div class="review-section mb-5 mt-5">
-                <div
-                    class="d-flex align-items-center justify-content-between gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
-                    <div class="section-head mb-0">
-                        <span class="sub-title text-capitalize text-dark mb-0">Ratings & Reviews</span>
-                    </div>
-                    <a href="#" class="btn btn-primary btn-sm">Post Your Reviews</a>
-                </div>
-                <!-- 1 -->
-                <!-- <div class="review-box  border-bottom ">
-                        <div class="d-flex align-items-start ">
-                            <div class="rating-span">★ <b>5</b></div>
-                            <div class="user-reviews">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, repellendus!</div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="review-product-img me-2">
-                                <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            </div>
-                            <div class="review-product-img me-2">
-                                <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            </div>
-                        </div>
                        
-                        <div class="user-information mt-2">
-                            <div class="d-flex align-items-center">
-                                <h6 class="name mb-0 text-gray">pooja jangid</h6>
-                                <div class="date">Dec,2024</div>
-                            </div>
-                        </div>
-                   </div>  -->
-
-                <!-- 2 -->
-                <!-- <div class="review-box  border-bottom ">
-                        <div class="d-flex align-items-start ">
-                            <div class="rating-span">★ <b>5</b></div>
-                            <div class="user-reviews">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, repellendus!</div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="review-product-img me-2">
-                                <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            </div>
-                            <div class="review-product-img me-2">
-                                <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            </div>
-                        </div>
-                   
-                        <div class="user-information mt-2">
-                            <div class="d-flex align-items-center">
-                                <h6 class="name mb-0 text-gray">pooja jangid</h6>
-                                <div class="date">Dec,2024</div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                <div class="review-wrapper  border-bottom ">
-                    <!-- User Info and Rating -->
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-2">
-                            <!-- <i class="fas fa-user"></i> -->
-                            <img src="https://images-eu.ssl-images-amazon.com/images/S/amazon-avatars-global/default._CR0,0,1024,1024_SX48_.png"
-                                alt="">
-                        </div>
-                        <span class="fw-bold">Ashiq Ali</span>
-                    </div>
-
-                    <!-- Star Rating and Title -->
-                    <div class="mb-1">
-                        <span class="star-rating me-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="fw-semibold">Arif Bhai superb installation</span>
-                    </div>
-
-                    <!-- Review Date -->
-                    <div class="mb-2">
-                        <span class="review-date">Reviewed in India on 17 February 2024</span>
-                    </div>
-
-                    <!-- Style Info -->
-                    <div class="mb-2">
-                        <span class="style-name">Style Name: 2 Ton 5 Star (2023 Model)</span>
-                        <span class="verified-badge ms-2">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Verified Purchase
-                        </span>
-                    </div>
-
-                    <!-- Review Text -->
-                    <div class="mb-3">
-                        <p class="mb-0">Arif Bhai very good intallation and reasonable price, 10 star , polite and
-                            friendly</p>
-                    </div>
-
-                    <!-- Review Images -->
-                    <div class="review-images">
-                        <div class="d-flex gap-2">
-
-
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-
-
-                        </div>
+                        <p>{!! nl2br(e($product->description)) !!}</p>
                     </div>
                 </div>
-                <div class="review-wrapper  border-bottom ">
-                    <!-- User Info and Rating -->
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-2">
-                            <!-- <i class="fas fa-user"></i> -->
-                            <img src="https://images-eu.ssl-images-amazon.com/images/S/amazon-avatars-global/default._CR0,0,1024,1024_SX48_.png"
-                                alt="">
+
+                <!-- RIGHT -->
+                <div class="col-lg-6">
+                    <h2 class="product-title">{{ $product->name }}</h2>
+
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        @if ($product->seller)
+                            <h6 class="product-seller mb-0" style="color: blue;">Listed by a verified partner store:
+                                {{ $product->seller->shop_name ?? 'Unknown Seller' }}
+                            </h6>
+                            <span class="subscribe-icon" data-tooltip="Subscribe this Seller" id="subscribeIcon">
+                            <i class="fas fa-bell fa-lg text-primary" style="cursor:pointer;"></i>
+                        </span>
+                            
+                        
+                            
+                        @endif
+
+                        
+                    </div>
+                    <h6 class="product-seller mb-0" style="color: blue;">
+                            <a href="{{ route('seller.store', $product->seller->id) }}" target="_blank" class="product-seller mb-0" style="color: blue;">
+                             Visit Store:
+                                {{ $product->seller->shop_name ?? 'Unknown Seller' }}
+                            </a>
+                    </h6>
+                    
+                    <br>
+
+                    <div class="price-row mb-2">
+                        <div class="price-container">
+                            <span class="currency">{{ $product->currency ?? '$' }}</span>
+                            <span class="price-big" id="current-price">{{ number_format($finalPrice, 2) }}</span>
+                            <span class="price-small"></span>
                         </div>
-                        <span class="fw-bold">Ashiq Ali</span>
-                    </div>
-
-                    <!-- Star Rating and Title -->
-                    <div class="mb-1">
-                        <span class="star-rating me-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="fw-semibold">Arif Bhai superb installation</span>
-                    </div>
-
-                    <!-- Review Date -->
-                    <div class="mb-2">
-                        <span class="review-date">Reviewed in India on 17 February 2024</span>
-                    </div>
-
-                    <!-- Style Info -->
-                    <div class="mb-2">
-                        <span class="style-name">Style Name: 2 Ton 5 Star (2023 Model)</span>
-                        <span class="verified-badge ms-2">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Verified Purchase
-                        </span>
-                    </div>
-
-                    <!-- Review Text -->
-                    <div class="mb-3">
-                        <p class="mb-0">Arif Bhai very good intallation and reasonable price, 10 star , polite and
-                            friendly</p>
-                    </div>
-
-                    <!-- Review Images -->
-                    <div class="review-images">
-                        <div class="d-flex gap-2">
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
+                        @if ($hasDiscount)
+                            <div class="price-info">
+                                <span class="badge-discount">{{ number_format($product->discount * 100, 0) }}%
+                                    off</span>
+                                <span
+                                    class="price-dec">{{ $product->currency ?? '$' }}{{ number_format($product->price, 2) }}</span>
+                            </div>
+                        @endif
+                        <div class="rating">
+                            <span class="stars" id="starsContainer"></span>
+                            <span id="reviewCount">{{ $totalReviews }} Reviews</span>
                         </div>
                     </div>
-                </div>
-                <div class="review-wrapper  border-bottom ">
-                    <!-- User Info and Rating -->
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-2">
-                            <!-- <i class="fas fa-user"></i> -->
-                            <img src="https://images-eu.ssl-images-amazon.com/images/S/amazon-avatars-global/default._CR0,0,1024,1024_SX48_.png"
-                                alt="">
+
+                    <div class="stock-status-row" style="display: flex; align-items: center;">
+                        <span id="stockText" class="in-stock" style="font-weight: 600;">
+                            <span id="stock-status"
+                                class="{{ $product->stock_quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
+                                {{ $product->stock_quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+                            </span>
+                            <span id="stock-count">({{ $product->stock_quantity }} stocks)</span>
+                        </span>
+                    </div>
+
+                    <div class="delivery-label">Delivery: <span>$6 USD (5 Days estimated)</span></div>
+
+                    @if ($product->sku)
+                        <span><strong>SKU:</strong> <span id="display-sku">{{ $product->sku }}</span></span>
+                        &nbsp;|&nbsp;
+                    @endif
+                    @if ($product->brand)
+                        <span><strong>Brand:</strong> {{ $product->brand->name }}</span> &nbsp;|&nbsp;
+                    @endif
+                    @if ($product->category)
+                        <span><strong>Category:</strong> {{ $product->category->name }}</span>
+                    @endif
+
+                    @if ($variants->count() > 0)
+                        <div style="font-weight:700; margin-top:15px;">Variants:</div>
+                        <div class="colors-grid" id="colorsGrid">
+                            <button class="color-circle active" data-variant-id="base" data-variant-name="Base"
+                                data-variant-price="{{ $finalPrice }}" data-variant-sku="{{ $product->sku }}"
+                                data-variant-qty="{{ $product->stock_quantity }}"
+                                data-variant-images='@json(array_values(array_map(fn($img) => asset("storage/$img"), $productImages)))'
+                                data-variant-thumb="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : '' }}"
+                                onclick="selectVariant(this)">
+                                <div class="color-label">Default</div>
+                            </button>
+
+                            @foreach ($variants as $variant)
+                                @php
+                                    $vImgs = $variant->images;
+                                    if (is_string($vImgs)) {
+                                        $vImgs = json_decode($vImgs, true);
+                                    }
+                                    $vImgs = is_array($vImgs) ? array_filter(array_values($vImgs)) : [];
+                                    $firstThumb = !empty($vImgs)
+                                        ? asset('storage/' . reset($vImgs))
+                                        : ($product->thumbnail
+                                            ? asset('storage/' . $product->thumbnail)
+                                            : '');
+                                @endphp
+                                <button
+                                    class="color-circle {{ $variant->quantity <= 0 ? 'out-of-stock-variant' : '' }}"
+                                    data-variant-id="{{ $variant->id }}"
+                                    data-variant-name="{{ $variant->variant_name }}"
+                                    data-variant-price="{{ $variant->price }}"
+                                    data-variant-sku="{{ $variant->sku }}"
+                                    data-variant-qty="{{ $variant->quantity }}"
+                                    data-variant-images='@json(array_values(array_map(fn($img) => asset("storage/$img"), $vImgs)))'
+                                    data-variant-thumb="{{ $firstThumb }}"
+                                    {{ $variant->quantity <= 0 ? 'disabled' : '' }} onclick="selectVariant(this)">
+                                    <div class="color-label">{{ $variant->variant_name }}</div>
+                                    @if ($variant->quantity <= 0)
+                                        <small>(Out)</small>
+                                    @endif
+                                </button>
+                            @endforeach
                         </div>
-                        <span class="fw-bold">Ashiq Ali</span>
+
+                        <div id="variant-info-badge" class="selected-variant-info mt-2" style="display:none;">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span id="variant-badge-text"></span>
+                        </div>
+
+                        <div class="size-section d-flex align-items-center gap-2">
+                            <div style="font-weight:700;">Size:</div>
+                            <div class="sizes" id="sizeOptions">
+                                @foreach ($product->sizes as $size)
+                                    <div class="size-pill" data-size="{{ $size->size }}"
+                                        onclick="selectSize(this)">
+                                        {{ $size->size }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Unified Button Row -->
+                    <div class="product-action-row">
+                        <div class="qty-section d-flex align-items-center gap-2">
+                            <div style="font-weight:700;">QTY:</div>
+                            <div class="qty-box">
+                                <button id="minus" class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                                <input id="qtyInput" type="number" value="1" min="1"
+                                    max="{{ $product->maximum_purchase_quantity ?? 999 }}">
+                                <button id="plus" class="qty-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            @if (isset($product->is_cart) && $product->is_cart)
+                                <button class="add-to-cart-btn"
+                                    onclick="window.location.href='{{ route('cart.index') }}'">Go To Cart</button>
+                            @else
+                                <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">Add to
+                                    Cart</button>
+                            @endif
+                            <button class="buy-now-btn" onclick="buyNow({{ $product->id }})">
+                                Buy Now
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Star Rating and Title -->
-                    <div class="mb-1">
-                        <span class="star-rating me-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="fw-semibold">Arif Bhai superb installation</span>
+                    <div class="wallet-pill">Earn 50🪙 AyitiCash for buying with your wallet</div>
+
+                    <div style="margin-top: 12px;">
+                        <a href="#" style="color:#0b7285; font-weight:600; text-decoration:none;">
+                            <i class="fa-regular fa-comment-dots"></i> Ask a question about this product
+                        </a>
                     </div>
 
-                    <!-- Review Date -->
-                    <div class="mb-2">
-                        <span class="review-date">Reviewed in India on 17 February 2024</span>
-                    </div>
+                    <div class="guarantee">
+                        <div class="guar-head">
+                            <div class="guar-icon"><i class="fa fa-shield-alt"></i></div>
+                            <div>
+                                <div style="font-weight:800; font-size:16px;">Guaranteed by Ayitibook</div>
+                                <div style="font-size:13px; color:#666;">Delivery & Return Promise</div>
+                            </div>
+                        </div>
+                        <ul class="guar-list mt-2">
+                            <li>30 Day Money-Back</li>
+                            <li>Real-time Tracking</li>
+                            <li>Local Customer Support</li>
+                        </ul>
 
-                    <!-- Style Info -->
-                    <div class="mb-2">
-                        <span class="style-name">Style Name: 2 Ton 5 Star (2023 Model)</span>
-                        <span class="verified-badge ms-2">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Verified Purchase
-                        </span>
-                    </div>
-
-                    <!-- Review Text -->
-                    <div class="mb-3">
-                        <p class="mb-0">Arif Bhai very good intallation and reasonable price, 10 star , polite and
-                            friendly</p>
-                    </div>
-
-                    <!-- Review Images -->
-                    <div class="review-images">
-                        <div class="d-flex gap-2">
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
-                            <img src="./assets/images/poducts/sm-img3.png" alt="review-product-img">
+                        <div style="margin-top:12px;">
+                            <a href="#"
+                                style="text-decoration:none; color:var(--primary); font-weight:700;">Delivery & Return
+                                Policy</a>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
-
-          
         </div>
     </div>
 
-    <!-- Site Footer -->
-    @include('components.footer')
+    <!-- Video Modals -->
+    @foreach ($productVideos as $i => $video)
+        <div class="modal fade" id="videoModal{{ $i }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <video controls class="w-100" style="max-height:500px;">
+                            <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
+                        </video>
+                    </div>
+                    <button type="button" class="btn btn-secondary position-absolute top-0 end-0 m-2"
+                        data-bs-dismiss="modal"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <div class="container container-page">
+
+        <!-- related product -->
+        <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative mt-5">
+            <div class="section-head mb-0">
+                <span class="sub-title text-capitalize">Related Product</span>
+            </div>
+        </div>
+
+        <div class="swiper related-product-swiper pt-3">
+            <div class="swiper-wrapper">
+                @forelse($relatedProducts as $related)
+                    <div class="swiper-slide">
+                        <div class="related-product mb-4">
+                            <div class="media-box">
+                                <div class="product-img">
+                                    <a href="{{ route('products.show', $related) }}">
+                                        <img src="{{ $related->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                            alt="{{ $related->name }}">
+                                    </a>
+                                    <div class="hover-btn">
+                                        <button class="btn add-cart add-cart2"
+                                            onclick="addToCart({{ $related->id }})">Add To Cart</button>
+                                    </div>
+                                </div>
+                                @if ($related->discount_price)
+                                    <span
+                                        class="badge style1 badge-primary">-{{ round($related->discount_percentage) }}%</span>
+                                @endif
+                            </div>
+                            <div class="content-box">
+                                <h6 class="title">
+                                    <a href="{{ route('products.show', $related) }}">{{ $related->name }}</a>
+                                </h6>
+                                <div class="meta-div">
+                                    <span class="text1 text-danger">{{ $related->currency ?? '$' }}
+                                        {{ number_format($related->final_price ?? $related->price, 2) }}</span>
+                                    @if ($related->discount_price)
+                                        <p class="text1 text-gray"><strike>{{ $related->currency ?? '$' }}
+                                                {{ number_format($related->price, 2) }}</strike></p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    @for ($p = 0; $p < 4; $p++)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4" style="opacity:.4;">
+                                <div class="media-box">
+                                    <div class="product-img" style="background:#f5f5f5;height:200px;"></div>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">No related products</h6>
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Suggested product -->
+        <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative mt-5">
+            <div class="section-head mb-0">
+                <span class="sub-title text-capitalize">Suggested Product</span>
+            </div>
+        </div>
+
+        <div class="swiper suggest-product-swiper pt-3">
+            <div class="swiper-wrapper">
+                @forelse($suggestedProducts->take(8) as $suggested)
+                    <div class="swiper-slide">
+                        <div class="suggested-product mb-4">
+                            <div class="media-box">
+                                <div class="product-img">
+                                    <a href="{{ route('products.show', $suggested) }}">
+                                        <img src="{{ $suggested->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                            alt="{{ $suggested->name }}">
+                                    </a>
+                                    <div class="hover-btn">
+                                        <button class="btn add-cart add-cart2"
+                                            onclick="addToCart({{ $suggested->id }})">Add To Cart</button>
+                                    </div>
+                                </div>
+                                @if ($suggested->discount_price)
+                                    <span
+                                        class="badge style1 badge-primary">-{{ round($suggested->discount_percentage) }}%</span>
+                                @endif
+                            </div>
+                            <div class="content-box">
+                                <h6 class="title">
+                                    <a href="{{ route('products.show', $suggested) }}">{{ $suggested->name }}</a>
+                                </h6>
+                                <div class="meta-div">
+                                    <span class="text1 text-danger">{{ $suggested->currency ?? '$' }}
+                                        {{ number_format($suggested->final_price ?? $suggested->price, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    @for ($p = 0; $p < 4; $p++)
+                        <div class="swiper-slide">
+                            <div class="suggested-product mb-4" style="opacity:.4;">
+                                <div class="media-box">
+                                    <div class="product-img" style="background:#f5f5f5;height:200px;"></div>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">No suggested products</h6>
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div class="review-section mb-5 mt-5" id="review-section">
+            <div
+                class="d-flex align-items-center justify-content-between gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize text-dark mb-0">Ratings & Reviews</span>
+                </div>
+                @auth
+                    @if (!$userReview)
+                        <a href="#write-review" class="btn btn-primary btn-sm">Post Your Reviews</a>
+                    @endif
+                @endauth
+            </div>
+
+            <!-- Flash messages -->
+            @if (session('review_success'))
+                <div class="review-alert success">
+                    <i class="fas fa-check-circle"></i> {{ session('review_success') }}
+                </div>
+            @endif
+            @if (session('review_error'))
+                <div class="review-alert error">
+                    <i class="fas fa-exclamation-circle"></i> {{ session('review_error') }}
+                </div>
+            @endif
+
+            <!-- Ratings Summary Section -->
+            @if ($totalReviews > 0)
+                <div class="rating-summary-card">
+                    <div class="rating-big-score">
+                        <div class="score">{{ number_format($avgRating, 1) }}</div>
+                        <div class="rev-stars lg mt-1">
+                            @for ($s = 1; $s <= 5; $s++)
+                                @if ($s <= floor($avgRating))
+                                    <i class="fas fa-star"></i>
+                                @elseif($s - $avgRating < 1)
+                                    <i class="fas fa-star-half-alt"></i>
+                                @else
+                                    <i class="far fa-star"></i>
+                                @endif
+                            @endfor
+                        </div>
+                        <div class="out-of">out of 5</div>
+                        <div class="total-reviews">{{ $totalReviews }} {{ Str::plural('review', $totalReviews) }}
+                        </div>
+                    </div>
+
+                    <div class="rating-breakdown">
+                        @foreach ($ratingCounts as $star => $count)
+                            <div class="rating-bar-row">
+                                <span class="bar-label">{{ $star }} <i class="fas fa-star"
+                                        style="color:#f5a623;font-size:.7rem;"></i></span>
+                                <div class="bar-track">
+                                    <div class="bar-fill"
+                                        style="width: {{ $totalReviews > 0 ? round(($count / $totalReviews) * 100) : 0 }}%">
+                                    </div>
+                                </div>
+                                <span class="bar-count">{{ $count }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Write review form / login prompt / already-reviewed -->
+            @auth
+                @if ($userReview)
+                    <div class="already-reviewed-banner">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                        <div>
+                            <strong>You've already reviewed this product.</strong>
+                            Your {{ $userReview->rating }}-star review is shown below.
+                        </div>
+                    </div>
+                @else
+                    <div class="write-review-card" id="write-review">
+                        <h5>
+                            <i class="fas fa-pen-alt" style="color:var(--primary);"></i>
+                            Share your experience
+                        </h5>
+
+                        @if ($errors->any())
+                            <div class="review-alert error mb-3">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <div>
+                                    @foreach ($errors->all() as $err)
+                                        <div>{{ $err }}</div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('reviews.store', $product) }}" method="POST"
+                            enctype="multipart/form-data" id="reviewForm">
+                            @csrf
+
+                            <label class="form-label fw-semibold mb-1">Your Rating <span
+                                    class="text-danger">*</span></label>
+                            <div class="star-picker" id="starPicker">
+                                @for ($s = 5; $s >= 1; $s--)
+                                    <input type="radio" name="rating" id="star{{ $s }}"
+                                        value="{{ $s }}" {{ old('rating') == $s ? 'checked' : '' }} required>
+                                    <label for="star{{ $s }}"
+                                        title="{{ $s }} star{{ $s > 1 ? 's' : '' }}">&#9733;</label>
+                                @endfor
+                            </div>
+                            <p class="text-muted" id="star-hint"
+                                style="font-size:.78rem;margin-top:-8px;margin-bottom:14px;">Click a star to rate</p>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="reviewBody">Your Review <span
+                                        class="text-danger">*</span></label>
+                                <textarea id="reviewBody" name="body" class="review-textarea"
+                                    placeholder="What did you like or dislike? How was the quality, packaging, delivery…" minlength="10"
+                                    maxlength="2000" required>{{ old('body') }}</textarea>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <span style="font-size:.72rem;color:#aaa;">Min 10 characters</span>
+                                    <span id="charCount" style="font-size:.72rem;color:#aaa;">0 / 2000</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Photos <span class="text-muted fw-normal">(optional,
+                                        up to 5)</span></label>
+                                <div>
+                                    <label for="reviewImagesTrigger" class="image-upload-label">
+                                        <i class="fas fa-camera"></i> Add Photos
+                                    </label>
+                                    <div id="fileInputsContainer"></div>
+                                    <input type="file" id="reviewImagesTrigger"
+                                        accept="image/jpeg,image/png,image/jpg,image/webp" class="d-none"
+                                        onchange="previewImages(this)">
+                                </div>
+                                <div id="review-image-previews"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-paper-plane me-1"></i> Submit Review
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            @else
+                <div class="login-to-review">
+                    <i class="fas fa-lock mb-2 d-block" style="font-size:1.5rem;color:#c084fc;"></i>
+                    <strong>Want to share your experience?</strong><br>
+                    <a href="{{ route('login') }}">Log in</a> or <a href="{{ route('register') }}">create an account</a>
+                    to write a review.
+                </div>
+            @endauth
+
+            <!-- Review list -->
+            @if ($totalReviews > 0)
+                <h6 class="fw-bold mb-3"
+                    style="color:#555;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;">
+                    {{ $totalReviews }} {{ Str::plural('Review', $totalReviews) }}
+                </h6>
+
+                @foreach ($reviews as $review)
+                    <div class="review-card" id="review-{{ $review->id }}">
+                        <div class="d-flex align-items-flex-start justify-content-between gap-3 flex-wrap">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="reviewer-avatar">
+                                    {{ strtoupper(substr($review->user->name ?? 'A', 0, 2)) }}
+                                </div>
+                                <div>
+                                    <div class="reviewer-name">
+                                        {{ $review->user->name ?? 'Anonymous' }}
+                                        @if (auth()->check() && $review->user_id === auth()->id())
+                                            <span class="ms-1"
+                                                style="font-size:.72rem;color:#9ca3af;font-weight:400;">(you)</span>
+                                        @endif
+                                    </div>
+                                    <div class="review-date">{{ $review->created_at->format('d M Y') }}</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                <span class="rev-stars">
+                                    @for ($s = 1; $s <= 5; $s++)
+                                        <i class="fa{{ $s <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                    @endfor
+                                    <span
+                                        style="font-size:.78rem;color:#888;margin-left:4px;">{{ $review->rating }}/5</span>
+                                </span>
+
+                                @auth
+                                    @if ($review->user_id === auth()->id())
+                                        <button class="btn-delete-review" onclick="confirmDelete({{ $review->id }})">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    @endif
+                                @endauth
+                            </div>
+                        </div>
+
+                        <p class="review-body">{{ $review->body }}</p>
+
+                        @if (!empty($review->images))
+                            <div class="review-photos">
+                                @foreach ($review->image_urls as $imgUrl)
+                                    <a href="{{ $imgUrl }}" target="_blank" rel="noopener">
+                                        <img src="{{ $imgUrl }}" alt="Review photo">
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            @else
+                <div class="text-center py-5" style="color:#bbb;">
+                    <i class="far fa-comment-dots fa-3x mb-3 d-block"></i>
+                    <p class="mb-0" style="font-size:.95rem;">No reviews yet. Be the first to review this product!
+                    </p>
+                </div>
+            @endif
+        </div>
     </div>
 
+    <!-- ========== FREQUENTLY BOUGHT TOGETHER ========== -->
+    @if (isset($frequentlyBoughtTogether) && $frequentlyBoughtTogether->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="frequently-bought-section">
+                <h4 style="color: #333; margin-bottom: 20px; font-weight: 700;">
+                    <i class="fas fa-shopping-basket me-2"></i> Frequently Bought Together
+                </h4>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row align-items-center">
+                            <!-- Current product -->
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : asset('assets/images/no-image.png') }}"
+                                        alt="{{ $product->name }}"
+                                        style="width: 80px; height: 80px; object-fit: contain;">
+                                    <div class="ms-3">
+                                        <strong>{{ Str::limit($product->name, 40) }}</strong>
+                                        <div class="current-price" style="color: var(--primary); font-weight: 700;">
+                                            {{ $product->currency ?? '$' }} {{ number_format($finalPrice, 2) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @foreach ($frequentlyBoughtTogether as $index => $item)
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center">
+                                        @if ($index == 0)
+                                            <div class="me-2"><i class="fas fa-plus-circle text-muted"></i></div>
+                                        @endif
+                                        <div>
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}"
+                                                style="width: 80px; height: 80px; object-fit: contain;">
+                                        </div>
+                                        <div class="ms-3">
+                                            <strong>{{ Str::limit($item->name, 35) }}</strong>
+                                            <div class="current-price"
+                                                style="color: var(--primary); font-weight: 700;">
+                                                {{ $item->currency ?? '$' }}
+                                                {{ number_format($item->final_price ?? $item->price, 2) }}</div>
+                                            <label class="mt-1">
+                                                <input type="checkbox" class="bundle-item"
+                                                    data-price="{{ $item->final_price ?? $item->price }}"
+                                                    data-id="{{ $item->id }}" checked> Add
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="bundle-total">
+                            <span>Total: <span class="total-price" id="bundleTotal"
+                                    style="font-size: 20px; font-weight: 700; color: var(--primary);">{{ $product->currency ?? '$' }}
+                                    {{ number_format($finalPrice + $frequentlyBoughtTogether->sum(fn($i) => $i->final_price ?? $i->price), 2) }}</span></span>
+                            <button class="btn-add-bundle" onclick="addBundleToCart()"
+                                style="background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; margin-left: 15px; cursor: pointer;">
+                                <i class="fas fa-shopping-cart me-1"></i> Add All to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== FLASH SALE SECTION ========== -->
+    @if (isset($flashSaleProducts) && $flashSaleProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-bolt me-2" style="color: #ff4757;"></i> Flash Sale
+                        <span class="badge bg-danger ms-2" style="animation: pulse 1.5s infinite;">Limited
+                            Time!</span>
+                    </span>
+                </div>
+                <a href="{{ route('products.index', ['flash_sale' => 1]) }}" class="text-primary">View All →</a>
+            </div>
+
+            <div class="swiper flash-sale-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($flashSaleProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img position-relative">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">FLASH
+                                            SALE</span>
+                                        @if ($item->discount_percentage > 0)
+                                            <span
+                                                class="badge bg-warning position-absolute top-0 end-0 m-2">-{{ round($item->discount_percentage) }}%</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                        @if ($item->price > ($item->final_price ?? $item->price))
+                                            <p class="text1 text-gray"><strike>{{ $item->currency ?? '$' }}
+                                                    {{ number_format($item->price, 2) }}</strike></p>
+                                        @endif
+                                    </div>
+                                    <button class="btn btn-sm btn-primary w-100 mt-2"
+                                        onclick="addToCart({{ $item->id }})">
+                                        <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== BEST SELLING PRODUCTS ========== -->
+    @if (isset($bestSellingProducts) && $bestSellingProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-trophy me-2" style="color: #f39c12;"></i> Best Sellers
+                    </span>
+                </div>
+                <a href="{{ route('products.index', ['sort' => 'best_selling']) }}" class="text-primary">View All
+                    →</a>
+            </div>
+
+            <div class="swiper best-selling-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($bestSellingProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Add To Cart</button>
+                                        </div>
+                                    </div>
+                                    <span class="badge"
+                                        style="background: #f39c12; position: absolute; top: 10px; left: 10px;">Best
+                                        Seller</span>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                    </div>
+                                    <div class="bottom-box d-flex align-items-center">
+                                        <div class="d-flex align-items-center rating-icon">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fa{{ $i <= round($item->avg_rating ?? 0) ? 's' : 'r' }} fa-star"
+                                                    style="color: #ffc107;"></i>
+                                            @endfor
+                                        </div>
+                                        <p class="rating-num mb-0"> ({{ $item->reviews_count ?? 0 }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== TOP RATED PRODUCTS ========== -->
+    @if (isset($topRatedProducts) && $topRatedProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-star me-2" style="color: #ffc107;"></i> Top Rated Products
+                    </span>
+                </div>
+                <a href="{{ route('products.index', ['min_rating' => 4]) }}" class="text-primary">View All →</a>
+            </div>
+
+            <div class="swiper top-rated-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($topRatedProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Add To Cart</button>
+                                        </div>
+                                    </div>
+                                    <span class="badge"
+                                        style="background: #ffc107; position: absolute; top: 10px; left: 10px;">
+                                        <i class="fas fa-star"></i> {{ number_format($item->avg_rating ?? 0, 1) }}
+                                    </span>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                    </div>
+                                    <div class="bottom-box d-flex align-items-center">
+                                        <div class="d-flex align-items-center rating-icon">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fa{{ $i <= round($item->avg_rating ?? 0) ? 's' : 'r' }} fa-star"
+                                                    style="color: #ffc107;"></i>
+                                            @endfor
+                                        </div>
+                                        <p class="rating-num mb-0"> ({{ $item->reviews_count ?? 0 }})</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== NEW ARRIVALS ========== -->
+    @if (isset($newArrivals) && $newArrivals->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-clock me-2" style="color: #3498db;"></i> New Arrivals
+                    </span>
+                </div>
+                <a href="{{ route('products.index', ['sort' => 'newest']) }}" class="text-primary">View All →</a>
+            </div>
+
+            <div class="swiper new-arrivals-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($newArrivals as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Add To Cart</button>
+                                        </div>
+                                    </div>
+                                    <span class="badge"
+                                        style="background: #3498db; position: absolute; top: 10px; left: 10px;">NEW</span>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== DISCOUNTED PRODUCTS ========== -->
+    @if (isset($discountedProducts) && $discountedProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-tags me-2" style="color: #e74c3c;"></i> Special Offers
+                    </span>
+                </div>
+                <a href="{{ route('products.index') }}" class="text-primary">View All →</a>
+            </div>
+
+            <div class="swiper discounted-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($discountedProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Add To Cart</button>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="badge style1 badge-primary">-{{ round($item->discount_percentage ?? 0) }}%</span>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                        <p class="text1 text-gray"><strike>{{ $item->currency ?? '$' }}
+                                                {{ number_format($item->price, 2) }}</strike></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== SAME SELLER PRODUCTS ========== -->
+    @if (isset($sameSellerProducts) && $sameSellerProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-store me-2" style="color: #8e44ad;"></i> More from
+                        {{ $product->seller->shop_name ?? 'this seller' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="swiper same-seller-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($sameSellerProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Add To Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- ========== LOW STOCK ALERT ========== -->
+    @if (isset($lowStockProducts) && $lowStockProducts->count() > 0)
+        <div class="container container-page mt-5">
+            <div class="d-flex align-items-end gap-xl-5 gap-2 mb-3 flex-wrap position-relative">
+                <div class="section-head mb-0">
+                    <span class="sub-title text-capitalize">
+                        <i class="fas fa-exclamation-triangle me-2" style="color: #e67e22;"></i> Almost Gone! Low
+                        Stock
+                    </span>
+                </div>
+            </div>
+
+            <div class="swiper low-stock-swiper pt-3">
+                <div class="swiper-wrapper">
+                    @foreach ($lowStockProducts as $item)
+                        <div class="swiper-slide">
+                            <div class="related-product mb-4">
+                                <div class="media-box">
+                                    <div class="product-img">
+                                        <a href="{{ route('products.show', $item) }}">
+                                            <img src="{{ $item->thumbnail_url ?? asset('assets/images/no-image.png') }}"
+                                                alt="{{ $item->name }}">
+                                        </a>
+                                        <div class="hover-btn">
+                                            <button class="btn add-cart add-cart2"
+                                                onclick="addToCart({{ $item->id }})">Buy Now</button>
+                                        </div>
+                                    </div>
+                                    <span class="badge" style="background: #e67e22;">Only
+                                        {{ $item->stock_quantity }} left!</span>
+                                </div>
+                                <div class="content-box">
+                                    <h6 class="title">
+                                        <a href="{{ route('products.show', $item) }}">{{ $item->name }}</a>
+                                    </h6>
+                                    <div class="meta-div">
+                                        <span class="text1 text-danger">{{ $item->currency ?? '$' }}
+                                            {{ number_format($item->final_price ?? $item->price, 2) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Delete Review Modal -->
+    <div class="modal fade" id="deleteReviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-trash-alt me-2"></i>Delete Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body py-4 text-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3 d-block"></i>
+                    <p class="mb-1 fw-semibold">Are you sure you want to delete your review?</p>
+                    <p class="text-muted" style="font-size:.85rem;">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteReviewForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="fas fa-trash-alt me-1"></i> Yes, Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @include('includes.footer')
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/custom-swiper.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
-      <!-- mobile js -->
-    <script src="{{ asset('assets/js/mobile.js') }}"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/js/custom-swiper.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/mobile.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Base data
+        const BASE_CURRENCY = "{{ $product->currency ?? '$' }}";
+        const BASE_PRICE = {{ $finalPrice }};
+        const BASE_QTY = {{ $product->stock_quantity }};
+        const BASE_SKU = "{{ $product->sku }}";
+        const BASE_THUMB = "{{ $product->thumbnail ? asset('storage/' . $product->thumbnail) : '' }}";
+        const BASE_IMAGES = @json(array_values(array_map(fn($img) => asset("storage/$img"), $productImages)));
 
-    
-  <!-- Toastify JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        let imageCount = 0;
+        let selectedVariantId = null;
+        let selectedSize = null;
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <!-- subscribed button  -->
-<script>
-    const icon = document.getElementById("subscribeIcon");
-
-    icon.addEventListener("click", function () {
-        icon.classList.add("ringing");
-
-        setTimeout(() => {
-            icon.classList.remove("ringing");
-        }, 600); // match the animation duration
-
-        // Toggle gold color
-        if (icon.classList.contains("subscribed")) {
-            icon.classList.remove("subscribed");
-            icon.style.color = "#0d6efd"; // Bootstrap primary
-        } else {
-            icon.classList.add("subscribed");
-            icon.style.color = "goldenrod";
+        // Thumbnail switching
+        function switchMainImage(src, element) {
+            document.querySelectorAll('.thumb-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            const mainImg = document.getElementById('mainImage');
+            mainImg.classList.add('fading');
+            setTimeout(() => {
+                mainImg.src = src;
+                mainImg.classList.remove('fading');
+            }, 150);
         }
-    });
-</script>
 
-    <!-- related product -->
-    <script>
-        var swiper = new Swiper(".related-product-swiper", {
-            slidesPerView: 4,
-            spaceBetween: 30,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            // autoplay: {
-            // delay: 2500,
-            // disableOnInteraction: false,
-            // },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
+        // Size selection - UPDATED to store selected size
+        function selectSize(element) {
+            document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+            selectedSize = element.dataset.size;
+        }
 
-                },
-
-                480: {
-                    slidesPerView: 2,
-                },
-
-                768: {
-                    slidesPerView: 2,
-                },
-
-                991: {
-                    slidesPerView: 3,
-                },
-
-                1024: {
-                    slidesPerView: 3,
-                },
-                1200: {
-                    slidesPerView: 4,
-                },
-            }
-        });
-    </script>
-
-    <!-- suggest product -->
-    <script>
-        var swiper = new Swiper(".suggest-product-swiper", {
-            slidesPerView: 4,
-            spaceBetween: 30,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
-
-                },
-
-                480: {
-                    slidesPerView: 2,
-                },
-
-                768: {
-                    slidesPerView: 2,
-                },
-
-                991: {
-                    slidesPerView: 3,
-                },
-
-                1024: {
-                    slidesPerView: 3,
-                },
-                1200: {
-                    slidesPerView: 4,
-                },
-            }
-        });
-    </script>
-
-    <!-- latest product -->
-    <script>
-        var swiper = new Swiper(".latest-product", {
-            slidesPerView: 4,
-            spaceBetween: 30,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            autoplay: {
-                delay: 2500,
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
-
-                },
-
-                480: {
-                    slidesPerView: 2,
-                },
-
-                768: {
-                    slidesPerView: 2,
-                },
-
-                991: {
-                    slidesPerView: 3,
-                },
-
-                1024: {
-                    slidesPerView: 3,
-                },
-                1200: {
-                    slidesPerView: 4,
-                },
-            }
-        });
-
+        // Quantity change
         function changeQuantity(change) {
-           const quantityInput = document.getElementById('quantity');
-
-           let currentValue= parseInt(quantityInput.value);
-
-              if (change === -1 && currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-              } else if (change === 1) {
-                quantityInput.value = currentValue + 1;
-              }
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) || 1;
+            const max = parseInt(input.max) || 999;
+            val = Math.min(Math.max(val + change, 1), max);
+            input.value = val;
         }
-    </script>
 
-     <script>
-    function addWishlist(productId) {
+        // Subscribe bell animation
+        document.getElementById('subscribeIcon')?.addEventListener('click', function() {
+            this.classList.add('ringing');
+            setTimeout(() => this.classList.remove('ringing'), 600);
+            this.classList.toggle('subscribed');
+            this.style.color = this.classList.contains('subscribed') ? 'goldenrod' : '#0d6efd';
+        });
+
+        // Variant selector - UPDATED to store selected variant
+        function selectVariant(btn) {
+            if (btn.disabled) return;
+
+            document.querySelectorAll('.color-circle').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Store selected variant ID
+            selectedVariantId = btn.dataset.variantId === 'base' ? null : btn.dataset.variantId;
+
+            const price = parseFloat(btn.dataset.variantPrice);
+            const sku = btn.dataset.variantSku;
+            const qty = parseInt(btn.dataset.variantQty);
+            const thumb = btn.dataset.variantThumb;
+            let images = [];
+            try {
+                images = JSON.parse(btn.dataset.variantImages || '[]');
+            } catch (e) {}
+
+            // Update price
+            document.getElementById('current-price').textContent = price.toFixed(2);
+
+            // Update SKU
+            const skuEl = document.getElementById('display-sku');
+            if (skuEl) skuEl.textContent = sku || '—';
+
+            // Update stock
+            const stockStatus = document.getElementById('stock-status');
+            const stockCount = document.getElementById('stock-count');
+            stockStatus.textContent = qty > 0 ? 'In Stock' : 'Out of Stock';
+            stockStatus.className = qty > 0 ? 'in-stock' : 'out-of-stock';
+            stockCount.textContent = '(' + qty + ' stocks)';
+
+            // Update quantity max
+            document.getElementById('qtyInput').max = qty > 0 ? qty : 1;
+
+            // Update variant badge
+            const badge = document.getElementById('variant-info-badge');
+            if (btn.dataset.variantId === 'base') {
+                badge.style.display = 'none';
+            } else {
+                badge.style.display = 'inline-flex';
+                document.getElementById('variant-badge-text').textContent = btn.dataset.variantName + (sku ? ' · SKU: ' +
+                    sku : '');
+            }
+
+            // Update main image
+            const mainImg = document.getElementById('mainImage');
+            const newThumb = thumb || (images.length > 0 ? images[0] : BASE_THUMB);
+            if (newThumb) {
+                mainImg.classList.add('fading');
+                setTimeout(() => {
+                    mainImg.src = newThumb;
+                    mainImg.classList.remove('fading');
+                }, 150);
+            }
+
+            // Update thumbnails
+            const galleryImages = images.length > 0 ? images : (thumb ? [thumb] : BASE_IMAGES);
+            updateThumbnails(galleryImages, thumb);
+        }
+
+        function updateThumbnails(images, activeThumb) {
+            const thumbContainer = document.querySelector('.thumbs-vertical');
+            if (!thumbContainer) return;
+
+            // Keep video thumbnails
+            const videoThumbs = thumbContainer.querySelectorAll('.video-thumb');
+
+            // Clear existing image thumbnails
+            const existingThumbs = thumbContainer.querySelectorAll('.thumb-btn:not(.video-thumb)');
+            existingThumbs.forEach(thumb => thumb.remove());
+
+            // Add new image thumbnails
+            images.forEach((img, i) => {
+                if (!img) return;
+                const thumbBtn = document.createElement('div');
+                thumbBtn.className = 'thumb-btn' + (activeThumb === img ? ' active' : '');
+                thumbBtn.innerHTML = `<img src="${img}" alt="Product image ${i+1}">`;
+                thumbBtn.onclick = () => switchMainImage(img, thumbBtn);
+                thumbContainer.appendChild(thumbBtn);
+            });
+        }
+
+        // Star rating render
+        function renderStars(rating) {
+            const starsContainer = document.getElementById('starsContainer');
+            if (!starsContainer) return;
+            starsContainer.innerHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalf = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+            for (let i = 0; i < fullStars; i++) starsContainer.innerHTML += '<i class="fa fa-star"></i>';
+            if (hasHalf) starsContainer.innerHTML += '<i class="fa fa-star-half-alt"></i>';
+            for (let i = 0; i < emptyStars; i++) starsContainer.innerHTML += '<i class="fa-regular fa-star"></i>';
+        }
+
+        renderStars({{ $avgRating }});
+
+        // Get selected variant ID
+        function getSelectedVariantId() {
+            return selectedVariantId;
+        }
+
+        // Get selected size - NEW FUNCTION
+        function getSelectedSize() {
+            return selectedSize;
+        }
+
+        // Toast notification
+        function toast(msg, type) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === "success" ? "linear-gradient(to right,#00b09b,#96c93d)" :
+                    "linear-gradient(to right,#ff5f6d,#ffc371)"
+            }).showToast();
+        }
+
+        // Add to cart - UPDATED to include size
+        function addToCart(productId) {
+            @guest
+            window.location.href = "{{ route('login') }}";
+            return;
+        @endguest
+        const variantId = getSelectedVariantId();
+        const size = getSelectedSize();
+        const quantity = document.getElementById('qtyInput').value;
+
+        // Check if size is required (if size options exist)
+        const sizeOptions = document.getElementById('sizeOptions');
+        if (sizeOptions && sizeOptions.children.length > 0 && !size) {
+            toast("Please select a size", "error");
+            return;
+        }
+
         $.ajax({
-            url: "/wishlist/add",   // Laravel route
+            url: "{{ route('cart.add') }}",
             type: "POST",
             data: {
                 product_id: productId,
-                _token: "{{ csrf_token() }}" // CSRF protection
+                variant_id: variantId,
+                size: size,
+                quantity: quantity,
+                _token: "{{ csrf_token() }}"
             },
-            success: function(response) {
-                Toastify({
-                    text: response.message || "Product added to wishlist!",
-                    duration: 3000,
-                    gravity: "top", // top or bottom
-                    position: "right", // left, center or right
-                    //  only  green color
-
-                    backgroundColor:"#5cb85c",
-                }).showToast();
-
-                document.getElementById('wishlist-btn-' + productId).classList.toggle('active_wish');
-
-                refreshWishlistCount();
+            success: function(r) {
+                toast(r.message || "Added to cart!", "success");
+                refreshCartCount();
             },
             error: function(xhr) {
-                Toastify({
-                    text: xhr.responseJSON?.message || "Error adding to wishlist",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                }).showToast();
+                toast(xhr.responseJSON?.message || "Something went wrong!", "error");
             }
         });
-    }
+        }
 
-    function addToCart(productId) {
-    $.ajax({
-        url: "{{ route('cart.add') }}",
-        type: "POST",
-        data: {
-            product_id: productId,
-            _token: "{{ csrf_token() }}"
-        },
-        success: function(response) {
-            // Toastify success message
-            Toastify({
-                text: response.message || "Added to cart!",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            }).showToast();
+        // Buy now - UPDATED to include size
+        function buyNow(productId) {
+            @guest
+            window.location.href = "{{ route('login') }}";
+            return;
+        @endguest
+        const variantId = getSelectedVariantId();
+        const size = getSelectedSize();
+        const quantity = document.getElementById('qtyInput').value;
 
-            // Refresh cart count in header
+        // Check if size is required (if size options exist)
+        const sizeOptions = document.getElementById('sizeOptions');
+        if (sizeOptions && sizeOptions.children.length > 0 && !size) {
+            toast("Please select a size", "error");
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('cart.add') }}",
+            type: "POST",
+            data: {
+                product_id: productId,
+                variant_id: variantId,
+                size: size,
+                quantity: quantity,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(r) {
+                toast(r.message || "Added!", "success");
+                refreshCartCount();
+                // Pass cart_item_id so cart page can select ONLY this item
+                const cartItemId = r.cart_item_id || '';
+                window.location.href = "{{ route('cart.index') }}" + (cartItemId ? '?buy_now=' +
+                    cartItemId : '');
+            },
+            error: function(xhr) {
+                toast(xhr.responseJSON?.message || "Something went wrong!", "error");
+            }
+        });
+        }
+
+        // Add to wishlist
+        function addWishlist(productId) {
+            $.ajax({
+                url: "/wishlist/add",
+                type: "POST",
+                data: {
+                    product_id: productId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(r) {
+                    toast(r.message || "Added to wishlist!", "success");
+                    const btn = document.getElementById('wishlist-btn-' + productId);
+                    if (btn) {
+                        btn.classList.toggle('active_wish');
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('far');
+                            icon.classList.toggle('fas');
+                        }
+                    }
+                    refreshWishlistCount();
+                },
+                error: function(xhr) {
+                    toast(xhr.responseJSON?.message || "Error", "error");
+                }
+            });
+        }
+
+        function refreshCartCount() {
+            $.get("{{ route('cart.count') }}", function(d) {
+                $("#cart-count").text(d.count);
+            });
+        }
+
+        function refreshWishlistCount() {
+            $.get("{{ route('wishlist.count') }}", function(d) {
+                $("#wishlist-count").text(d.count);
+            });
+        }
+
+        // Stock warning logic
+        document.addEventListener('DOMContentLoaded', function() {
+            var stockCount = {{ $product->stock_quantity }};
+            var stockText = document.getElementById('stockText');
+
+            if (stockCount === 0) {
+                if (stockText) {
+                    stockText.innerHTML = '<span style="color:#d93636;">Out of Stock</span>';
+                }
+            } else if (stockCount <= 7) {
+                if (stockText) {
+                    stockText.innerHTML = `
+                    <span style="color:#d93636;">In Stock</span>
+                    <span style="color:#d93636; font-weight:700;">
+                        <i class="fa fa-exclamation-triangle stock-warning-icon" style="color:#ffc107; cursor:pointer" title="Stocks are getting exhausted, make it yours as soon as possible!"></i>
+                    </span>
+                `;
+                }
+            }
+
+            // Initialize selected size from any pre-selected size pill
+            const activeSize = document.querySelector('.size-pill.active');
+            if (activeSize) {
+                selectedSize = activeSize.dataset.size;
+            }
+
+            // Initialize selected variant from any pre-selected variant
+            const activeVariant = document.querySelector('.color-circle.active');
+            if (activeVariant && activeVariant.dataset.variantId !== 'base') {
+                selectedVariantId = activeVariant.dataset.variantId;
+            }
+        });
+
+        // Swiper initialization
+        var relatedSwiper = new Swiper(".related-product-swiper", {
+            slidesPerView: 4,
+            spaceBetween: 30,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+            breakpoints: {
+                320: {
+                    slidesPerView: 1
+                },
+                480: {
+                    slidesPerView: 2
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                991: {
+                    slidesPerView: 3
+                },
+                1024: {
+                    slidesPerView: 3
+                },
+                1200: {
+                    slidesPerView: 4
+                }
+            }
+        });
+
+        var suggestSwiper = new Swiper(".suggest-product-swiper", {
+            slidesPerView: 4,
+            spaceBetween: 30,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+            breakpoints: {
+                320: {
+                    slidesPerView: 1
+                },
+                480: {
+                    slidesPerView: 2
+                },
+                768: {
+                    slidesPerView: 2
+                },
+                991: {
+                    slidesPerView: 3
+                },
+                1024: {
+                    slidesPerView: 3
+                },
+                1200: {
+                    slidesPerView: 4
+                }
+            }
+        });
+
+        // Bundle total calculation
+        function calculateBundleTotal() {
+            let total = {{ $finalPrice }};
+            document.querySelectorAll('.bundle-item').forEach(checkbox => {
+                if (checkbox.checked) {
+                    total += parseFloat(checkbox.dataset.price);
+                }
+            });
+            const bundleTotal = document.getElementById('bundleTotal');
+            if (bundleTotal) {
+                bundleTotal.textContent = BASE_CURRENCY + ' ' + total.toFixed(2);
+            }
+        }
+
+        // Add bundle to cart - UPDATED to handle size and variant for main product
+        function addBundleToCart() {
+            const variantId = getSelectedVariantId();
+            const size = getSelectedSize();
+            const quantity = document.getElementById('qtyInput').value;
+
+            // Check if size is required for main product
+            const sizeOptions = document.getElementById('sizeOptions');
+            if (sizeOptions && sizeOptions.children.length > 0 && !size) {
+                toast("Please select a size for the main product", "error");
+                return;
+            }
+
+            // First add the main product with its selected options
+            const productIds = [];
+
+            // Add main product with selected options
+            $.ajax({
+                url: "{{ route('cart.add') }}",
+                type: "POST",
+                async: false,
+                data: {
+                    product_id: {{ $product->id }},
+                    variant_id: variantId,
+                    size: size,
+                    quantity: quantity,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(r) {
+                    productIds.push({{ $product->id }});
+                },
+                error: function(xhr) {
+                    toast("Failed to add main product: " + (xhr.responseJSON?.message || "Error"), "error");
+                    return;
+                }
+            });
+
+            // Add bundle items
+            document.querySelectorAll('.bundle-item').forEach(checkbox => {
+                if (checkbox.checked) {
+                    const itemId = parseInt(checkbox.dataset.id);
+                    $.ajax({
+                        url: "{{ route('cart.add') }}",
+                        type: "POST",
+                        async: false,
+                        data: {
+                            product_id: itemId,
+                            quantity: 1,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(r) {
+                            productIds.push(itemId);
+                        }
+                    });
+                }
+            });
+
+            toast(productIds.length + ' items added to cart!', 'success');
             refreshCartCount();
-        },
-        error: function(xhr) {
-            Toastify({
-                text: xhr.responseJSON?.message || "Something went wrong!",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-            }).showToast();
+            setTimeout(() => {
+                window.location.href = "{{ route('cart.index') }}";
+            }, 1000);
         }
-    });
-}
-function buyNow(productId) {
-    $.ajax({
-        url: "{{ route('cart.add') }}",
-        type: "POST",
-        data: {
-            product_id: productId,
-            _token: "{{ csrf_token() }}"
-        },
-        success: function(response) {
-            // Toastify success message
-            Toastify({
-                text: response.message || "Added to cart!",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            }).showToast();
 
-            // Refresh cart count in header
-            refreshCartCount();
-            // Redirect to cart page
-            window.location.href = "{{ route('cart.index') }}";
-        },
-        error: function(xhr) {
-            Toastify({
-                text: xhr.responseJSON?.message || "Something went wrong!",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-            }).showToast();
+        // Review star hints
+        const starHints = {
+            1: 'Terrible',
+            2: 'Poor',
+            3: 'Average',
+            4: 'Good',
+            5: 'Excellent'
+        };
+        document.querySelectorAll('.star-picker input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const hint = document.getElementById('star-hint');
+                if (hint) hint.textContent = starHints[this.value] || '';
+            });
+        });
+
+        // Character counter
+        const bodyEl = document.getElementById('reviewBody');
+        const countEl = document.getElementById('charCount');
+        if (bodyEl && countEl) {
+            bodyEl.addEventListener('input', function() {
+                countEl.textContent = this.value.length + ' / 2000';
+                countEl.style.color = this.value.length > 1900 ? '#dc2626' : '#aaa';
+            });
         }
-    });
-}
 
-    function refreshWishlistCount() {
-    $.ajax({
-        url: "{{ route('wishlist.count') }}",
-        type: "GET",
-        success: function(data) {
-            $("#wishlist-count").text(data.count);
+        // Image preview for review
+        function previewImages(trigger) {
+            const maxFiles = 5;
+            const container = document.getElementById('review-image-previews');
+            const hiddenBox = document.getElementById('fileInputsContainer');
+            const file = trigger.files[0];
+
+            if (!file) return;
+
+            const existing = hiddenBox.querySelectorAll('input[type="file"]').length;
+            if (existing >= maxFiles) {
+                toast('You can upload a maximum of 5 photos.', 'error');
+                trigger.value = '';
+                return;
+            }
+
+            const idx = imageCount++;
+
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'file';
+            hiddenInput.name = 'images[]';
+            hiddenInput.id = 'hiddenImg_' + idx;
+            hiddenInput.style.display = 'none';
+            hiddenInput.accept = 'image/jpeg,image/png,image/jpg,image/webp';
+
+            try {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                hiddenInput.files = dt.files;
+            } catch (e) {
+                trigger.name = 'images[]';
+                trigger.id = 'hiddenImg_' + idx;
+                hiddenBox.appendChild(trigger);
+
+                const newTrigger = document.createElement('input');
+                newTrigger.type = 'file';
+                newTrigger.id = 'reviewImagesTrigger';
+                newTrigger.accept = 'image/jpeg,image/png,image/jpg,image/webp';
+                newTrigger.className = 'd-none';
+                newTrigger.onchange = function() {
+                    previewImages(this);
+                };
+                document.querySelector('label[for="reviewImagesTrigger"]').after(newTrigger);
+                document.querySelector('label[for="reviewImagesTrigger"]').setAttribute('for', 'reviewImagesTrigger');
+
+                showPreview(file, idx, container);
+                return;
+            }
+
+            hiddenBox.appendChild(hiddenInput);
+            showPreview(file, idx, container);
+            trigger.value = '';
         }
-    });
-}
 
-
-
-
-function refreshCartCount() {
-    $.ajax({
-        url: "{{ route('cart.count') }}",
-        type: "GET",
-        success: function(data) {
-            $("#cart-count").text(data.count); // cart count update karega
+        function showPreview(file, idx, container) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const wrap = document.createElement('div');
+                wrap.className = 'img-preview-wrap';
+                wrap.setAttribute('data-img-idx', idx);
+                wrap.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="remove-img" onclick="removePreview(${idx})">×</button>`;
+                container.appendChild(wrap);
+            };
+            reader.readAsDataURL(file);
         }
-    });
-}
-</script>
 
+        function removePreview(idx) {
+            const inp = document.getElementById('hiddenImg_' + idx);
+            if (inp) inp.remove();
+            const wrap = document.querySelector(`.img-preview-wrap[data-img-idx="${idx}"]`);
+            if (wrap) wrap.remove();
+        }
 
+        // Delete review confirm
+        function confirmDelete(reviewId) {
+            document.getElementById('deleteReviewForm').action = `/reviews/${reviewId}`;
+            const modal = new bootstrap.Modal(document.getElementById('deleteReviewModal'));
+            modal.show();
+        }
+
+        // Auto-scroll to review section if flash message present
+        @if (session('review_success') || session('review_error'))
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('review-section')?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        @endif
+
+        // Review images slider scroll buttons
+        const slider = document.querySelector(".review-images-slider");
+        const leftBtn = document.querySelector(".scroll-btn.left");
+        const rightBtn = document.querySelector(".scroll-btn.right");
+
+        if (leftBtn && rightBtn && slider) {
+            leftBtn.addEventListener("click", () => {
+                slider.scrollBy({
+                    left: -150,
+                    behavior: "smooth"
+                });
+            });
+            rightBtn.addEventListener("click", () => {
+                slider.scrollBy({
+                    left: 150,
+                    behavior: "smooth"
+                });
+            });
+        }
+
+        // =============================================================
+        // Affiliate Share Panel
+        // Uses $.ajax so Laravel session cookie is sent automatically,
+        // same pattern as addToCart / addWishlist in this file.
+        // =============================================================
+        var affPanelOpen = false;
+        var affLinkCache = null;
+
+        function toggleAffiliatePanel(productId) {
+            var panel = document.getElementById('affiliateSharePanel');
+            var content = document.getElementById('affPanelContent');
+
+            // Toggle closed
+            if (affPanelOpen) {
+                panel.classList.remove('show');
+                affPanelOpen = false;
+                return;
+            }
+
+            // Reuse cached link
+            if (affLinkCache) {
+                affRenderLink(content, affLinkCache);
+                panel.classList.add('show');
+                affPanelOpen = true;
+                return;
+            }
+
+            // Open immediately with loading state
+            content.innerHTML =
+                '<div style="text-align:center;padding:14px 0;color:#0b7285;font-size:13px;font-weight:600;"><i class=\"fas fa-spinner fa-spin me-2\"></i> Generating your affiliate link...</div>';
+            panel.classList.add('show');
+            affPanelOpen = true;
+
+            // jQuery ajax - sends session cookie automatically (same as addToCart)
+            $.ajax({
+                url: "{{ route('affiliate.generate-link') }}",
+                type: "POST",
+                data: {
+                    product_id: productId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    affLinkCache = data;
+                    affRenderLink(content, data);
+                },
+                error: function(xhr) {
+                    var resp = xhr.responseJSON || {};
+                    if (xhr.status === 403 || resp.not_affiliate) {
+                        affRenderNotAffiliate(content);
+                    } else {
+                        affRenderPlain(content);
+                    }
+                }
+            });
+        }
+
+        function affRenderLink(container, data) {
+            var url = data.url;
+            var pct = data.commission_percentage;
+            var text = encodeURIComponent('Check out this product! ' + url);
+            var badge = pct ? '<span class=\"aff-commission-badge\">Earn ' + pct + '%</span>' : '';
+            container.innerHTML =
+                '<div class=\"aff-panel-title\"><i class=\"fas fa-link\"></i> Your Affiliate Link ' + badge + '</div>' +
+                '<div class=\"aff-link-box\">' +
+                '<input id=\"affLinkInput\" type=\"text\" value=\"' + url + '\" readonly>' +
+                '<button class=\"aff-copy-btn\" id=\"affCopyBtn\" onclick=\"affCopy()\"><i class=\"fas fa-copy\"></i> Copy</button>' +
+                '</div>' +
+                '<div class=\"aff-socials\">' +
+                '<a href=\"https://wa.me/?text=' + text +
+                '\" target=\"_blank\" class=\"aff-social-btn whatsapp\"><i class=\"fab fa-whatsapp\"></i> WhatsApp</a>' +
+                '<a href=\"https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) +
+                '\" target=\"_blank\" class=\"aff-social-btn facebook\"><i class=\"fab fa-facebook-f\"></i> Facebook</a>' +
+                '<a href=\"https://twitter.com/intent/tweet?text=' + text +
+                '\" target=\"_blank\" class=\"aff-social-btn twitter\"><i class=\"fab fa-twitter\"></i> Twitter</a>' +
+                '</div>';
+        }
+
+        function affRenderNotAffiliate(container) {
+            container.innerHTML =
+                '<div class=\"aff-not-affiliate\">' +
+                '<i class=\"fas fa-info-circle text-primary me-1\"></i>' +
+                ' You are not an affiliate yet. ' +
+                "<a href=\"{{ route('dashboard') }}\">Join our affiliate program</a>" +
+                ' to earn commissions by sharing products.' +
+                '</div>';
+        }
+
+        function affRenderPlain(container) {
+            var url = window.location.href;
+            var text = encodeURIComponent('Check out this product! ' + url);
+            container.innerHTML =
+                '<div class=\"aff-panel-title\"><i class=\"fas fa-share-alt\"></i> Share this product</div>' +
+                '<div class=\"aff-link-box\">' +
+                '<input id=\"affLinkInput\" type=\"text\" value=\"' + url + '\" readonly>' +
+                '<button class=\"aff-copy-btn\" id=\"affCopyBtn\" onclick=\"affCopy()\"><i class=\"fas fa-copy\"></i> Copy</button>' +
+                '</div>' +
+                '<div class=\"aff-socials\">' +
+                '<a href=\"https://wa.me/?text=' + text +
+                '\" target=\"_blank\" class=\"aff-social-btn whatsapp\"><i class=\"fab fa-whatsapp\"></i> WhatsApp</a>' +
+                '<a href=\"https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) +
+                '\" target=\"_blank\" class=\"aff-social-btn facebook\"><i class=\"fab fa-facebook-f\"></i> Facebook</a>' +
+                '</div>';
+        }
+
+        function affCopy() {
+            var input = document.getElementById('affLinkInput');
+            var btn = document.getElementById('affCopyBtn');
+            if (!input) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(input.value).then(function() {
+                    btn.innerHTML = '<i class=\"fas fa-check\"></i> Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(function() {
+                        btn.innerHTML = '<i class=\"fas fa-copy\"></i> Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
+            } else {
+                input.select();
+                document.execCommand('copy');
+                btn.innerHTML = '<i class=\"fas fa-check\"></i> Copied!';
+                setTimeout(function() {
+                    btn.innerHTML = '<i class=\"fas fa-copy\"></i> Copy';
+                }, 2000);
+            }
+        }
+
+        // Initialize all additional swipers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bundle checkboxes
+            document.querySelectorAll('.bundle-item').forEach(checkbox => {
+                checkbox.addEventListener('change', calculateBundleTotal);
+            });
+
+            // Flash Sale Swiper
+            if (document.querySelector('.flash-sale-swiper')) {
+                new Swiper(".flash-sale-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false
+                    },
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // Best Selling Swiper
+            if (document.querySelector('.best-selling-swiper')) {
+                new Swiper(".best-selling-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // Top Rated Swiper
+            if (document.querySelector('.top-rated-swiper')) {
+                new Swiper(".top-rated-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // New Arrivals Swiper
+            if (document.querySelector('.new-arrivals-swiper')) {
+                new Swiper(".new-arrivals-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    autoplay: {
+                        delay: 4000,
+                        disableOnInteraction: false
+                    },
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // Discounted Products Swiper
+            if (document.querySelector('.discounted-swiper')) {
+                new Swiper(".discounted-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // Same Seller Swiper
+            if (document.querySelector('.same-seller-swiper')) {
+                new Swiper(".same-seller-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+
+            // Low Stock Swiper
+            if (document.querySelector('.low-stock-swiper')) {
+                new Swiper(".low-stock-swiper", {
+                    slidesPerView: 4,
+                    spaceBetween: 30,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1
+                        },
+                        480: {
+                            slidesPerView: 2
+                        },
+                        768: {
+                            slidesPerView: 2
+                        },
+                        991: {
+                            slidesPerView: 3
+                        },
+                        1200: {
+                            slidesPerView: 4
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

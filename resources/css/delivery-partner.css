@@ -1,0 +1,86 @@
+/* ── Delivery Partner Badge Styles ─────────────────────────────────────
+   Include in resources/css/delivery-partner.css  (or your main app CSS)
+   ───────────────────────────────────────────────────────────────────── */
+
+/* Base badge */
+.delivery-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem .65rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: default;
+}
+
+/* ── Tier colours ─── */
+
+.badge-unranked {
+    background: #e9ecef;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+}
+
+.badge-beginner {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    color: #475569;
+    border: 1px solid #94a3b8;
+    box-shadow: 0 1px 3px rgba(71,85,105,.2);
+}
+
+.badge-bronze {
+    background: linear-gradient(135deg, #f5deb3 0%, #cd7f32 100%);
+    color: #fff;
+    border: 1px solid #b8700e;
+    box-shadow: 0 1px 4px rgba(205,127,50,.4);
+    text-shadow: 0 1px 1px rgba(0,0,0,.25);
+}
+
+.badge-silver {
+    background: linear-gradient(135deg, #f0f0f0 0%, #b0bec5 100%);
+    color: #37474f;
+    border: 1px solid #90a4ae;
+    box-shadow: 0 1px 4px rgba(144,164,174,.45);
+}
+
+.badge-gold {
+    background: linear-gradient(135deg, #fff9c4 0%, #ffd700 60%, #f9a825 100%);
+    color: #7b5900;
+    border: 1px solid #e6ac00;
+    box-shadow: 0 1px 6px rgba(255,215,0,.55);
+    text-shadow: 0 1px 0 rgba(255,255,255,.4);
+}
+
+.badge-platinum {
+    background: linear-gradient(135deg, #e8e6ff 0%, #9f94f0 50%, #7b68ee 100%);
+    color: #fff;
+    border: 1px solid #6a5acd;
+    box-shadow: 0 2px 8px rgba(123,104,238,.5);
+    text-shadow: 0 1px 2px rgba(0,0,0,.3);
+    animation: platinum-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes platinum-shimmer {
+    0%,100% { box-shadow: 0 2px 8px rgba(123,104,238,.5); }
+    50%      { box-shadow: 0 2px 16px rgba(123,104,238,.85), 0 0 24px rgba(160,150,255,.4); }
+}
+
+/* ── Large variant (e.g., profile page) ─── */
+.delivery-badge.badge-lg {
+    padding: .5rem 1rem;
+    font-size: .875rem;
+    border-radius: 999px;
+}
+
+.delivery-badge.badge-lg i {
+    font-size: 1rem;
+}
+
+/* ── Progress hints list ─── */
+.badge-progress-hints {
+    border-left: 3px solid #ffc107;
+    padding-left: .75rem;
+}

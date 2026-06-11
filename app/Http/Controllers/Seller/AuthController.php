@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('seller.login');
+        return view('seller.auth.login');
     }
 
     public function login(Request $request)
@@ -20,17 +20,35 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // ✅ LOGIN USING SELLER GUARD
-        if (Auth::guard('seller')->attempt($credentials)) {
-
-            $request->session()->regenerate();
-
-            return redirect()->route('seller.dashboard');
+        if (! Auth::guard('seller')->attempt($credentials)) {
+            return back()->withErrors([
+                'email' => 'Invalid seller email or password.',
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => 'Invalid seller email or password.',
-        ]);
+        $seller = Auth::guard('seller')->user();
+
+        // Not yet approved by admin
+        if (! $seller->isApproved()) {
+            Auth::guard('seller')->logout();
+
+            return back()->withErrors([
+                'email' => 'Your seller account is pending admin approval. We will notify you by email once approved.',
+            ]);
+        }
+
+        // Approved but email/phone not verified
+        if (! $seller->is_verified) {
+            Auth::guard('seller')->logout();
+
+            return back()->withErrors([
+                'email' => 'Your account has not been verified yet. Please check your email for a verification link.',
+            ]);
+        }
+
+        $request->session()->regenerate();
+
+        return redirect()->route('seller.dashboard');
     }
 
     public function logout(Request $request)

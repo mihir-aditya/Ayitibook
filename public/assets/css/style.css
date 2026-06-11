@@ -4425,7 +4425,7 @@
    
    .nav-pills {
      --bs-nav-pills-border-radius: var(--bs-border-radius);
-     --bs-nav-pills-link-active-color: #fff;
+     --bs-nav-pills-link-active-color: #b6a1a1;
      --bs-nav-pills-link-active-bg: #C53D51;
    }
    

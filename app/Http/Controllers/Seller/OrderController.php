@@ -3,132 +3,136 @@
 namespace App\Http\Controllers\Seller;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Services\NotificationService;
 
 class OrderController extends Controller
 {
+    /* ──────────────────────────────────────────────
+     | List all orders for the logged-in seller
+     ─────────────────────────────────────────────── */
     public function index()
     {
-        $orders = DB::table('orders')->select('sl_no', 'order_id', 'user_id', 'total_amount', 'order_status', 'placed_at')->orderBy('placed_at', 'desc')->get();
-        
-        // Convert placed_at strings to Carbon instances
-        $orders = $orders->map(function($order) {
-            $order->placed_at = Carbon::parse($order->placed_at);
-            return $order;
-        });
-        
-        return view('sellr.apps.e-commerce.admin.orders', ['orders' => $orders]);
+        $seller = Auth::guard('seller')->user();
+
+        $orders = Order::with(['user'])
+            ->where('seller_id', $seller->id)
+            ->orderByDesc('placed_at')
+            ->get();
+
+        return view('seller.orders.orders', compact('orders'));
     }
 
+    /* ──────────────────────────────────────────────
+     | Show full order details
+     ─────────────────────────────────────────────── */
     public function show($id)
     {
-        $order = DB::table('orders')
-            ->select('sl_no', 'order_id', 'user_id', 'address_id', 'payment_method', 'total_amount', 'order_status', 'placed_at', 'created_at', 'updated_at')
-            ->where('sl_no', $id)
-            ->orWhere('order_id', $id)
+        $order = Order::with([
+                'items.product',
+                'items.product.seller',
+                'items.variant',
+                'user',
+                'address',
+            ])
+            ->where(function ($q) use ($id) {
+                $q->where('sl_no', $id)->orWhere('order_id', $id);
+            })
             ->first();
 
         if (!$order) {
             abort(404, 'Order not found');
         }
 
-        // Convert dates to Carbon instances
-        $order->placed_at = Carbon::parse($order->placed_at);
-        $order->created_at = Carbon::parse($order->created_at);
-        $order->updated_at = Carbon::parse($order->updated_at);
+        $user    = $order->user;
+        $address = $order->address;
+        $items   = $order->items;   // Collection of OrderItem, each has ->product and ->variant
 
-        // Use order_id if available, otherwise use sl_no
-        $orderId = $order->order_id ?? $order->sl_no;
-        
-        $items = DB::table('order_items')
-            ->leftJoin('product_variants', 'order_items.variant_id', '=', 'product_variants.variant_id')
-            ->where('order_items.order_id', $orderId)
-            ->select('order_items.*', 'product_variants.variant_name as variant_name')
-            ->get();
-
-        // Fetch user data (with null check)
-        $user = $order->user_id ? DB::table('users')->where('id', $order->user_id)->first() : null;
-
-        // Fetch address data (with null check)
-        $address = $order->address_id ? DB::table('addresses')->where('id', $order->address_id)->first() : null;
-
-        return view('sellr.apps.e-commerce.admin.orderdetails', ['order' => $order, 'items' => $items, 'user' => $user, 'address' => $address]);
+        return view('seller.orders.orderdetails', compact('order', 'items', 'user', 'address'));
     }
 
-    public function updateStatus($id)
+    /* ──────────────────────────────────────────────
+     | Update order status  (AJAX POST)
+     ─────────────────────────────────────────────── */
+    public function updateStatus(Request $request, $id)
     {
-        $order = DB::table('orders')
-            ->where('sl_no', $id)
-            ->orWhere('order_id', $id)
-            ->first();
-
+        $order = Order::where('sl_no', $id)->orWhere('order_id', $id)->first();
+ 
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
-
-        $status = request()->input('status');
-        
-        // Validate status
+ 
         $validStatuses = ['placed', 'confirmed', 'shipped', 'delivered', 'cancelled', 'refunded'];
+        $status        = $request->input('status');
+ 
         if (!in_array($status, $validStatuses)) {
             return response()->json(['error' => 'Invalid status'], 400);
         }
-
-        // Update the order status
-        DB::table('orders')
-            ->where('sl_no', $order->sl_no)
-            ->update([
-                'order_status' => $status,
-                'updated_at' => now()
-            ]);
-
-        return response()->json(['success' => true, 'message' => 'Order status updated']);
+ 
+        $order->order_status = $status;
+        $order->save();
+ 
+        // ── Notify the buyer ────────────────────────────────
+        $svc = app(NotificationService::class);
+        match ($status) {
+            'confirmed'  => $svc->orderConfirmed($order),
+            'shipped'    => $svc->orderShipped($order),
+            'delivered'  => $svc->orderDelivered($order),
+            'cancelled'  => $svc->orderCancelled($order, 'seller'),
+            default      => null,
+        };
+        // ────────────────────────────────────────────────────
+ 
+        return response()->json(['success' => true, 'message' => 'Status updated to ' . $status]);
     }
 
-    public function saveNotes($id)
+    /* ──────────────────────────────────────────────
+     | Save internal notes  (AJAX POST)
+     ─────────────────────────────────────────────── */
+    public function saveNotes(Request $request, $id)
     {
-        $order = DB::table('orders')
-            ->where('sl_no', $id)
-            ->orWhere('order_id', $id)
-            ->first();
+        $order = Order::where('sl_no', $id)->orWhere('order_id', $id)->first();
 
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
 
-        $notes = request()->input('notes');
-
-        // Update the order notes
+        // Use raw DB update since 'notes' isn't in $fillable on Order model
         DB::table('orders')
             ->where('sl_no', $order->sl_no)
-            ->update([
-                'notes' => $notes,
-                'updated_at' => now()
-            ]);
+            ->update(['notes' => $request->input('notes')]);
 
         return response()->json(['success' => true, 'message' => 'Notes saved']);
     }
 
+    /* ──────────────────────────────────────────────
+     | Cancel order  (AJAX POST)
+     ─────────────────────────────────────────────── */
     public function cancel($id)
     {
-        $order = DB::table('orders')
-            ->where('sl_no', $id)
-            ->orWhere('order_id', $id)
-            ->first();
-
+        $order = Order::where('sl_no', $id)->orWhere('order_id', $id)->first();
+ 
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
-
-        // Update the order status to cancelled
-        DB::table('orders')
-            ->where('sl_no', $order->sl_no)
-            ->update([
-                'order_status' => 'cancelled',
-                'updated_at' => now()
-            ]);
-
+ 
+        if (in_array($order->order_status, ['delivered', 'refunded'])) {
+            return response()->json([
+                'error' => 'Cannot cancel a ' . $order->order_status . ' order'
+            ], 422);
+        }
+ 
+        $order->order_status = 'cancelled';
+        $order->save();
+ 
+        // ── Notify the buyer ────────────────────────────────
+        app(NotificationService::class)->orderCancelled($order, 'seller');
+        // ────────────────────────────────────────────────────
+ 
         return response()->json(['success' => true, 'message' => 'Order cancelled']);
     }
 }

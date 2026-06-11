@@ -231,9 +231,9 @@
 
 <body>
  <!-- ====================site header ============================================-->
-   @include('components.top-header')
+ 
   <!-- large size header -->
-  @include('components.header')
+  @include('includes.header')
 
 
     <div class="page-wrapper">
@@ -1661,7 +1661,7 @@
 
 
         <!-- Site Footer -->
-        @include('components.footer')
+        @include('includes.footer')
         <!-- End Site Footer -->
     </div>
 

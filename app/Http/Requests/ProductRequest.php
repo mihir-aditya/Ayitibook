@@ -48,6 +48,13 @@ class ProductRequest extends FormRequest
             'min:0',
         ],
 
+            'affiliate_percentage' => [
+            'nullable',
+            'numeric',
+            'min:0',
+            'max:100',
+        ],
+
             'stock_quantity' => [
             'required_without:variants',
             'nullable',

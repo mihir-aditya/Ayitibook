@@ -221,9 +221,9 @@
 <body>
 
      <!-- ====================site header ============================================-->
-   @include('components.top-header')
+   
   <!-- large size header -->
-  @include('components.header')
+  @include('includes.header')
 
   
 
@@ -310,7 +310,7 @@
             </div>
         </div>
     </div>
-    @include('components.footer')
+    @include('includes.footer')
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>

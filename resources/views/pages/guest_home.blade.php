@@ -37,7 +37,7 @@
 
   <!-- boxicons -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js" defer></script>
   <style>
 .price {
     font-size: 20px;
@@ -217,9 +217,9 @@ all 0.3s ease-in-out;
 
 <body>
   <!-- ====================site header ============================================-->
-   @include('components.top-header')
+   {{-- @include('includes.top-header') --}}
   <!-- large size header -->
-  @include('components.guest-home')
+  @include('includes.header')
   
 
   
@@ -347,7 +347,7 @@ all 0.3s ease-in-out;
                   <div class="media-box ">
                     <div class="product-img">
                       <a href="product-detail.html">
-                        <img src="{{ asset($item->thumbnail) }}" alt="img1">
+                        <img src="{{ asset($item->thumbnail) }}" alt="img1" loading="lazy">
                       </a>
 
                       <div class="hover-btn">
@@ -1690,16 +1690,16 @@ all 0.3s ease-in-out;
   </div>
 
 
-  @include('components.footer')
+  @include('includes.footer')
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/js/custom-swiper.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
+  <script src="assets/js/custom-swiper.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
     <!-- mobile js -->
-  <script src="assets/js/mobile.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/mobile.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
 
 
   <!-- banner swiper -->

@@ -18,10 +18,10 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $sellerId = Auth::guard('seller')->id();
+        $seller   = Auth::guard('seller')->user();
+        $sellerId = $seller->id;
 
         /* ===================== METRICS ===================== */
-
         $totalProducts = Product::where('seller_id', $sellerId)->count();
 
         $activeProducts = Product::where('seller_id', $sellerId)
@@ -32,7 +32,7 @@ class DashboardController extends Controller
                 $q->where('seller_id', $sellerId);
             })
             ->distinct('order_id')
-            ->count('order_id');
+            ->count('sl_no');
 
         $totalRevenue = OrderItem::whereHas('product', function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId);
@@ -42,7 +42,6 @@ class DashboardController extends Controller
             ->sum(DB::raw('order_items.price * order_items.quantity'));
 
         /* ===================== CHARTS ===================== */
-
         $ordersChart = OrderItem::join('orders', 'orders.order_id', '=', 'order_items.order_id')
             ->join('products', 'products.id', '=', 'order_items.product_id')
             ->where('products.seller_id', $sellerId)
@@ -68,13 +67,52 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        return view('sellr.dashboard', compact(
+        /* ===================== RECENT ORDERS ===================== */
+        $recentOrders = Order::with(['items' => function ($q) use ($sellerId) {
+                $q->whereHas('product', function ($p) use ($sellerId) {
+                    $p->where('seller_id', $sellerId);
+                })->with('product');
+            }])
+            ->whereHas('items', function ($q) use ($sellerId) {
+                $q->whereHas('product', function ($p) use ($sellerId) {
+                    $p->where('seller_id', $sellerId);
+                });
+            })
+            ->orderBy('placed_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($order) use ($sellerId) {
+                // Filter items to only those belonging to this seller (in case of mixed orders)
+                $sellerItems = $order->items->filter(function ($item) use ($sellerId) {
+                    return $item->product->seller_id == $sellerId;
+                });
+
+                $totalAmount = $sellerItems->sum(function ($item) {
+                    return $item->price * $item->quantity;
+                });
+
+                $productNames = $sellerItems->map(function ($item) {
+                    return $item->product->name;
+                })->implode(', ');
+
+                return (object) [
+                    'order_id'      => $order->order_id,
+                    'order_status'  => $order->order_status,
+                    'product_names' => $productNames,
+                    'total_amount'  => $totalAmount,
+                    'placed_at'     => $order->placed_at,
+                ];
+            });
+
+        return view('seller.dashboard.dashboard', compact(
+            'seller',
             'totalProducts',
             'activeProducts',
             'totalOrders',
             'totalRevenue',
             'ordersChart',
-            'revenueChart'
+            'revenueChart',
+            'recentOrders'
         ));
     }
 }

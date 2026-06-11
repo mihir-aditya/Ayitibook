@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AdminSeeder::class,
             \Database\Seeders\OrdersTableSeeder::class,
+            TransactionSeeder::class,
         ]);
+        $this->call(CategorySeeder::class);
     }
 }
